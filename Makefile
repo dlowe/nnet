@@ -17,7 +17,7 @@ test:
 	@test $(CODE_SIZE) -le 4096
 	@echo "rule size $(RULE_SIZE) / 2048"
 	@test $(RULE_SIZE) -le 2048
-
+        
 $(NAME): test $(OBJ)
 	$(CC) -o $@ $(OBJ)
 
