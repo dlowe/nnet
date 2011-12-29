@@ -1,2 +1,4 @@
 nnet
 nnet.o
+nnet-test
+no-main-nnet.o
