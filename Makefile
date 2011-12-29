@@ -17,10 +17,19 @@ test:
 	@test $(CODE_SIZE) -le 4096
 	@echo "rule size $(RULE_SIZE) / 2048"
 	@test $(RULE_SIZE) -le 2048
-        
+	@echo "testing 'build' script"
+	@rm -rf prog.c prog
+	@cp $(CODE) prog.c
+	@./build
+	@test -e prog
+	@rm -rf prog.c prog
+	@echo "testing README.markdown"
+	@Markdown.pl README.markdown >/dev/null
+
 $(NAME): test $(OBJ)
 	$(CC) -o $@ $(OBJ)
 
 .PHONY: clean
 clean:
 	rm -rf $(NAME) $(OBJ)
+	rm -rf prog.c prog
