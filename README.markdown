@@ -1,1 +1,7 @@
-This is 'nnet', a tiny neural network & my entry to the 20th IOCCC.
+## Usage:
+    $ ./prog < prog.c
+    100
+
+## Synopsis:
+This is a tiny artificial neural network which can be used to classify
+files.
