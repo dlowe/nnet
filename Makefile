@@ -13,9 +13,10 @@ RULE_SIZE := $(shell cat $(CODE) | perl -pe 's/[;{}]\s//g' | perl -pe 's/\s//g' 
 
 .PHONY: test
 test:
+	@echo "code size $(CODE_SIZE) / 4096"
 	@test $(CODE_SIZE) -le 4096
+	@echo "rule size $(RULE_SIZE) / 2048"
 	@test $(RULE_SIZE) -le 2048
-	@test `cat nnet.c | perl -pe 's/[;{}]\s//g' | perl -pe 's/\s//g' | wc -c` -le 2048
 
 $(NAME): test $(OBJ)
 	$(CC) -o $@ $(OBJ)
