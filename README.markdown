@@ -1,15 +1,33 @@
 ## Usage:
-    $ ./prog <spam> <ham>
-    ...
-    $ ./prog < prog.c
-    100
+    $ ./prog ioccc.brain < prog.c
+    1.0
+
+    $ ./prog <spam directory> <ham directory> > my.brain
+    $ ./prog my.brain < some_spam
+    1.0
+    $ ./prog my.brain < some_ham
+    0.0
 
 ## Synopsis:
-This is a multilayer perceptron (feedforward artificial neural network) for
-classifying files.
+This is an artificially intelligent judging tool designed to help the IOCCC
+judges. Here's to shorter, more frequent contests!
+
+## Description:
+This is a multilayer perceptron (a feedforward artificial neural network)
+which can be trained, using backpropagation, to classify input files. I've
+included three trained brains:
+
+ * ioccc.brain, trained to identify winning IOCCC entries
+ * spam.brain, trained to identify email spam
+ * english.brain, trained to identify english text
+
+You can train it by pointing it at any pair of directories.
+
+## Obfuscation:
 
 ## Links:
  * [Example MLP in java](https://github.com/jimmikaelkael/multi-layer-perceptron)
  * [Feed-forward neural networks](http://en.wikipedia.org/wiki/Feedforward_neural_network)
  * [Bigram](http://en.wikipedia.org/wiki/Bigram)
  * [Hyperbolic functions](http://en.wikipedia.org/wiki/Hyperbolic_function)
+ * [public spam/ham corpora](http://spamassassin.apache.org/publiccorpus/)
