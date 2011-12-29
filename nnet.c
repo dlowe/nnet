@@ -1,24 +1,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-float bigrams[256 * 256];
+float bigrams[1<<16];
 
 void bigrammer(FILE *f) {
-    int pc = -1, c, n;
+    int p = getc(f), c, n;
 
-    for (n = 256 * 256; n > 0; --n) bigrams[n-1] = 0;
+    /* init bigrams to 0 (and init n to 0!) */
+    for (n = 1<<16; n > 0; --n) bigrams[n-1] = 0;
 
+    /* walk stream and remember bigrams */
     while ((c = getc(f)) != EOF) {
-        if (pc != -1) {
-            ++bigrams[256 * pc + c];
-            ++n;
-        }
-        pc = c;
+        ++bigrams[256 * p + c];
+        ++n;
+        p = c;
     }
 
-    if (n) {
-        for (pc = 0; pc < (256 * 256); ++pc) bigrams[pc] /= n;
-    }
+    /* normalize */
+    if (n) for (p = 0; p < 1<<16; ++p) bigrams[p] /= n;
 }
 
 int main(int argc, char **argv) {
