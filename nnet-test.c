@@ -8,6 +8,7 @@ extern float bigrams[256 * 256];
 extern void bigrammer(FILE *f);
 extern float logistic(float x);
 extern float activate(float *inputs, float *weights, int count);
+extern FILE **getfiles(char *dirname);
 
 #define IDX(s) ((s[0]) * 256 + (s[1]))
 
@@ -93,6 +94,60 @@ START_TEST (test_activate)
 }
 END_TEST
 
+START_TEST (test_getfiles)
+{
+    FILE **result;
+    char template[256] = "/tmp/tdir.XXXXXX";
+    char *dirname, dirname_slash[1024];
+    int i, j;
+
+    /* return an empty list for nonexistent dirs */
+    result = getfiles("some-nonexistent-directory");
+    fail_if(result == NULL);
+    fail_unless(result[0] == NULL);
+
+    /* return an empty list for empty dirs */
+    dirname = mkdtemp(template);
+    snprintf(dirname_slash, sizeof(dirname_slash), "%s/", dirname);
+
+    result = getfiles(dirname);
+    fail_if(result == NULL);
+    fail_unless(result[0] == NULL);
+
+    result = getfiles(dirname_slash);
+    fail_if(result == NULL);
+    fail_unless(result[0] == NULL);
+
+    /* return longer lists for dirs with more files... */
+    for (i = 0; i < 9; ++i) {
+        FILE *f;
+        char filename[1024];
+        snprintf(filename, sizeof(filename), "%s%d", dirname_slash, i);
+        f = fopen(filename, "w+");
+        fclose(f);
+
+        result = getfiles(dirname_slash);
+        fail_if(result == NULL);
+        for (j = 0; j <= i; ++j) {
+            fail_unless(result[j] != NULL);
+        }
+        fail_unless(result[j] == NULL);
+
+        /* ... but doesn't work without the trailing slash specified */
+        result = getfiles(dirname);
+        fail_if(result == NULL);
+        fail_unless(result[0] == NULL);
+    }
+
+    for (i = 0; i < 9; ++i) {
+        char filename[1024];
+        snprintf(filename, sizeof(filename), "%s%d", dirname_slash, i);
+        unlink(filename);
+    }
+    rmdir(dirname);
+}
+END_TEST
+
 int main(void) {
     TCase *tc;
     Suite *suite;
@@ -103,6 +158,7 @@ int main(void) {
     tcase_add_test(tc, test_bigrammer);
     tcase_add_test(tc, test_logistic);
     tcase_add_test(tc, test_activate);
+    tcase_add_test(tc, test_getfiles);
 
     suite = suite_create("nnet");
     suite_add_tcase(suite, tc);

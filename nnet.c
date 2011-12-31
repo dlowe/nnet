@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <dirent.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -36,6 +37,48 @@ float activate(float *inputs, float *weights, int count) {
     return logistic(s);
 }
 
+FILE **getfiles(char *dirname) {
+    DIR *d = opendir(dirname);
+    FILE **files = NULL;
+    int i = 0;
+    struct dirent *de;
+
+    while (d && (de = readdir(d))) {
+        if (de->d_type == DT_REG) {
+            char full_name[512];
+            snprintf(full_name, 512, "%s%s", dirname, de->d_name);
+
+            files = realloc(files, sizeof(FILE *) * (i + 1));
+            files[i] = fopen(full_name, "r");
+            if (files[i]) {
+                ++i;
+            }
+        }
+    }
+
+    /* null-terminate */
+    files = realloc(files, sizeof(FILE *) * (i + 1));
+    files[i] = NULL;
+
+    return files;
+}
+
+void t(FILE **f) {
+    int i;
+    printf("...\n");
+    for (i = 0; f[i]; ++i) {
+        printf("%d\n", i);
+    }
+    printf("xxx\n");
+}
+
 int main(int argc, char **argv) {
-    exit(0);
+    if (argc == 3) {
+        FILE **spam, **ham;
+        spam = getfiles(argv[1]);
+        t(spam);
+        ham  = getfiles(argv[2]);
+        t(ham);
+    }
+    return 0;
 }

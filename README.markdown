@@ -23,6 +23,11 @@ included three trained brains:
 
 You can train it by pointing it at any pair of directories.
 
+## Limitations
+You must include the trailing directory separator on spam and ham directories (allows the
+program to be portable without wasting precious bytes on figuring out how to concatenate
+directory and file names...)
+
 ## Obfuscation:
 
 ## Links:
