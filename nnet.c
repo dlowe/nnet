@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 float bigrams[1<<16];
 
@@ -18,6 +19,11 @@ void bigrammer(FILE *f) {
 
     /* normalize */
     if (n) for (p = 0; p < 1<<16; ++p) bigrams[p] /= n;
+}
+
+float logistic(float x) {
+    /* 1/(1+exp(-x)) */
+    return powf(1 + expf(-x), -1);
 }
 
 int main(int argc, char **argv) {

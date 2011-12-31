@@ -2,9 +2,11 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <float.h>
 
 extern float bigrams[256 * 256];
 extern void bigrammer(FILE *f);
+extern float logistic(float x);
 
 #define IDX(s) ((s[0]) * 256 + (s[1]))
 
@@ -66,6 +68,20 @@ START_TEST (test_bigrammer)
 }
 END_TEST
 
+START_TEST (test_logistic)
+{
+    float y;
+    y = logistic(0.0);
+    fail_unless(y == 0.5);
+
+    y = logistic(-1 * FLT_MAX);
+    fail_unless(y == 0.0);
+
+    y = logistic(FLT_MAX);
+    fail_unless(y == 1.0);
+}
+END_TEST
+
 int main(void) {
     TCase *tc;
     Suite *suite;
@@ -74,6 +90,7 @@ int main(void) {
     
     tc = tcase_create("nnet");
     tcase_add_test(tc, test_bigrammer);
+    tcase_add_test(tc, test_logistic);
 
     suite = suite_create("nnet");
     suite_add_tcase(suite, tc);
