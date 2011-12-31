@@ -7,6 +7,7 @@
 extern float bigrams[256 * 256];
 extern void bigrammer(FILE *f);
 extern float logistic(float x);
+extern float activate(float *inputs, float *weights, int count);
 
 #define IDX(s) ((s[0]) * 256 + (s[1]))
 
@@ -82,6 +83,16 @@ START_TEST (test_logistic)
 }
 END_TEST
 
+START_TEST (test_activate)
+{
+    float inputs[2]  = { 0.1, 0.1 };
+    float weights[2] = { -1.0, 1.0 };
+
+    float result = activate(inputs, weights, 2);
+    fail_unless(result == 0.5);
+}
+END_TEST
+
 int main(void) {
     TCase *tc;
     Suite *suite;
@@ -91,6 +102,7 @@ int main(void) {
     tc = tcase_create("nnet");
     tcase_add_test(tc, test_bigrammer);
     tcase_add_test(tc, test_logistic);
+    tcase_add_test(tc, test_activate);
 
     suite = suite_create("nnet");
     suite_add_tcase(suite, tc);

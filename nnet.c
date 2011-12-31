@@ -26,6 +26,16 @@ float logistic(float x) {
     return powf(1 + expf(-x), -1);
 }
 
+float activate(float *inputs, float *weights, int count) {
+    /* given N inputs and weights, activate a neuron */
+    int i;
+    float s = 0;
+    for (i = 0; i < count; ++i) {
+        s += inputs[i] * weights[i];
+    }
+    return logistic(s);
+}
+
 int main(int argc, char **argv) {
     exit(0);
 }
