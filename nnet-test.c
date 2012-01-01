@@ -7,7 +7,10 @@
 extern float bigrams[256 * 256];
 extern void bigrammer(FILE *f);
 extern float logistic(float x);
+extern float weighted_sum(float *inputs, float *weights, int count);
 extern float activate(float *inputs, float *weights, int count);
+extern float dx_activate(float *inputs, float *weights, int count);
+extern float evaluate(FILE *f, float weights[][1<<16]);
 extern FILE **getfiles(char *dirname);
 
 #define IDX(s) ((s[0]) * 256 + (s[1]))
@@ -84,6 +87,16 @@ START_TEST (test_logistic)
 }
 END_TEST
 
+START_TEST (test_weighted_sum)
+{
+    float inputs[2] = { 0.1, 0.1 };
+    float weights[2] = { -1.0, 1.0 };
+
+    float result = weighted_sum(inputs, weights, 2);
+    fail_unless(result == 0.0);
+}
+END_TEST
+
 START_TEST (test_activate)
 {
     float inputs[2]  = { 0.1, 0.1 };
@@ -91,6 +104,70 @@ START_TEST (test_activate)
 
     float result = activate(inputs, weights, 2);
     fail_unless(result == 0.5);
+}
+END_TEST
+
+START_TEST (test_dx_activate)
+{
+    float inputs[1];
+    float weights[1] = { 1.0 };
+    float result;
+
+    inputs[0] = 0;
+    result = dx_activate(inputs, weights, 1);
+    fail_unless(result == 0.25);
+
+    inputs[0] = FLT_MAX;
+    result = dx_activate(inputs, weights, 1);
+    fail_unless(result == 0);
+
+    inputs[0] = -1 * FLT_MAX;
+    result = dx_activate(inputs, weights, 1);
+    fail_unless(result == 0);
+}
+END_TEST
+
+START_TEST (test_evaluate)
+{
+    char template[256] = "/tmp/tfile.XXXXXX";
+    char *filename = mktemp(template);
+    FILE *f = fopen(filename, "w+");
+    float x;
+    float weights[7][1<<16];
+    int i, j;
+
+    write(fileno(f), "aa", 2);
+    fflush(f);
+
+    /* set all weights to zero */
+    for (i = 0; i < 7; ++i) {
+        for (j = 0; j < 1<<16; ++j) {
+            weights[i][j] = 0;
+        }
+    }
+
+    /* evaluates to 0.5 */
+    x = evaluate(f, weights);
+    fail_unless(x == 0.5);
+
+    /* force it to zero */
+    weights[0][IDX("aa")] = -7;
+    weights[6][0] = -100000;
+    x = evaluate(f, weights);
+    fail_unless(x == 0.0);
+    weights[0][IDX("aa")] = 0;
+    weights[6][0] = 0;
+
+    /* force it to one */
+    weights[1][IDX("aa")] = 7;
+    weights[6][1] = 100000;
+    x = evaluate(f, weights);
+    fail_unless(x == 1.0);
+    weights[1][IDX("aa")] = 0;
+    weights[6][1] = 0;
+
+    fclose(f);
+    unlink(filename);
 }
 END_TEST
 
@@ -157,7 +234,10 @@ int main(void) {
     tc = tcase_create("nnet");
     tcase_add_test(tc, test_bigrammer);
     tcase_add_test(tc, test_logistic);
+    tcase_add_test(tc, test_weighted_sum);
     tcase_add_test(tc, test_activate);
+    tcase_add_test(tc, test_dx_activate);
+    tcase_add_test(tc, test_evaluate);
     tcase_add_test(tc, test_getfiles);
 
     suite = suite_create("nnet");

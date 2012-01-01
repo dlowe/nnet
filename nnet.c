@@ -2,6 +2,8 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
+#include <time.h>
 
 float bigrams[1<<16];
 
@@ -27,14 +29,38 @@ float logistic(float x) {
     return powf(1 + expf(-x), -1);
 }
 
-float activate(float *inputs, float *weights, int count) {
-    /* given N inputs and weights, activate a neuron */
+float weighted_sum(float *inputs, float *weights, int count) {
+    /* return weighted sum of inputs */
     int i;
     float s = 0;
     for (i = 0; i < count; ++i) {
         s += inputs[i] * weights[i];
     }
-    return logistic(s);
+    return s;
+}
+
+float activate(float *inputs, float *weights, int count) {
+    /* given N inputs and weights, activate a neuron */
+    return logistic(weighted_sum(inputs, weights, count));
+}
+
+float dx_activate(float *inputs, float *weights, int count) {
+    /* given N inputs and weights, compute the derivative of the activation function */
+    float i = weighted_sum(inputs, weights, count);
+    return logistic(i) * logistic(-i);
+}
+
+#define N_HIDDEN 6
+float evaluate(FILE *f, float weights[][1<<16]) {
+    int i;
+
+    fseek(f, 0, SEEK_SET);
+    bigrammer(f);
+    for (i = 0; i < N_HIDDEN; ++i) {
+        bigrams[(1<<16) + i] = activate(bigrams, weights[i], 1<<16);
+        /* printf("hidden node %d: %f\n", i, bigrams[(1<<16) + i]); */
+    }
+    return activate(bigrams + (1<<16), weights[N_HIDDEN], N_HIDDEN);
 }
 
 FILE **getfiles(char *dirname) {
@@ -63,22 +89,28 @@ FILE **getfiles(char *dirname) {
     return files;
 }
 
-void t(FILE **f) {
-    int i;
-    printf("...\n");
-    for (i = 0; f[i]; ++i) {
-        printf("%d\n", i);
-    }
-    printf("xxx\n");
-}
-
+float weights[N_HIDDEN+1][1<<16];
 int main(int argc, char **argv) {
     if (argc == 3) {
         FILE **spam, **ham;
+        int i;
+
         spam = getfiles(argv[1]);
-        t(spam);
         ham  = getfiles(argv[2]);
-        t(ham);
+
+        /* randomize weights */
+        srand(time(NULL));
+        for (i = 0; i < N_HIDDEN+1; ++i) {
+            int j;
+            for (j = 0; j < 1<<16; ++j) {
+                weights[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
+            }
+        }
+
+        /* evaluate spam */
+        for (i = 0; spam[i]; ++i) {
+            printf("%f\n", evaluate(spam[i], weights));
+        }
     }
     return 0;
 }
