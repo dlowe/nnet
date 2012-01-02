@@ -29,6 +29,10 @@ float logistic(float x) {
     return powf(1 + expf(-x), -1);
 }
 
+float dlogistic(float y) {
+    
+}
+
 float weighted_sum(float *inputs, float *weights, int count) {
     /* return weighted sum of inputs */
     int i;
@@ -91,45 +95,82 @@ FILE **getfiles(char *dirname) {
 
 float weights[N_HIDDEN+1][1<<16];
 int main(int argc, char **argv) {
+    int i;
+
+    /* randomize weights */
+    srand(time(NULL));
+    for (i = 0; i < N_HIDDEN+1; ++i) {
+        int j;
+        for (j = 0; j < 1<<16; ++j) {
+            weights[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
+        }
+    }
+
     if ((argc == 4) && (argv[1][0] == '-')) {
         FILE **spam, **ham;
-        int i;
 
         spam = getfiles(argv[2]);
         ham  = getfiles(argv[3]);
 
-        /* randomize weights */
-        srand(time(NULL));
-        for (i = 0; i < N_HIDDEN+1; ++i) {
-            int j;
-            for (j = 0; j < 1<<16; ++j) {
-                weights[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
-            }
-        }
-
         /* evaluate spam */
         for (i = 0; spam[i]; ++i) {
-            fprintf(stderr, "%f\n", evaluate(spam[i], weights));
+            float out = evaluate(spam[i], weights);
+            float error, output_delta;
+            int j;
+
+            fprintf(stderr, "spam: %f\n", out);
+
+            error        = 1.0 - out;
+            output_delta = dx_activate(bigrams + (1<<16), weights[N_HIDDEN], N_HIDDEN) * error;
+
+            fprintf(stderr, "output error: %f, output_delta: %f\n", error, output_delta);
+
+            for (j = 0; j < N_HIDDEN; ++j) {
+                int k;
+                float hidden_delta, change;
+
+                error        = output_delta * weights[N_HIDDEN][j];
+                hidden_delta = dx_activate(bigrams, weights[j], 1<<16) * error;
+
+                fprintf(stderr, "hidden %d error: %f, delta: %f\n", j, error, hidden_delta);
+
+                /* update input weights for this hidden node */
+                for (k = 0; k < 1<<16; ++k) {
+                    change = hidden_delta * bigrams[k];
+                    weights[j][k] += 0.2*change;
+                }
+
+                /* update the output weight for this hidden node */
+                change = output_delta * bigrams[(1<<16) + j];
+                fprintf(stderr, "hidden %d weight: %f, change: %f\n", j, weights[N_HIDDEN][j], change);
+                weights[N_HIDDEN][j] += 0.2*change;
+            }
+
+            out = evaluate(spam[i], weights);
+            fprintf(stderr, "AFTER spam: %f\n", out);
         }
 
-        for (i = 0; spam[i]; ++i) {
-            fclose(spam[i]);
-        }
+        /* evaluate ham */
         for (i = 0; ham[i]; ++i) {
-            fclose(ham[i]);
+            float out = evaluate(ham[i], weights);
+            float error, output_delta;
+
+            fprintf(stderr, "ham: %f\n", out);
+
+            error        = 0.0 - out;
+            output_delta = dx_activate(bigrams + (1<<16), weights[N_HIDDEN], N_HIDDEN) * error;
+
+            fprintf(stderr, "error: %f, output_delta: %f\n", error, output_delta);
         }
 
         fwrite(weights, sizeof(weights), 1, stdout);
     } else {
-        int i;
-
         fread(weights, sizeof(weights), 1, stdin);
 
         for (i = 1; i < argc; ++i) {
             FILE *f = fopen(argv[i], "r");
             if (f) {
                 printf("%s %f\n", argv[i], evaluate(f, weights));
-                fclose(f);
             }
         }
     }

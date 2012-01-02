@@ -43,3 +43,4 @@ the included "brain" files use the same.
  * [public spam/ham corpora](http://spamassassin.apache.org/publiccorpus/)
  * [Back propagation](http://www.learnartificialneuralnetworks.com/backpropagation.html)
  * [Example in C++](http://www.codeproject.com/KB/recipes/BP.aspx)
+ * [Nice tutorial](http://www.shiffman.net/teaching/nature/nn/)
