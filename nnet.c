@@ -91,12 +91,12 @@ FILE **getfiles(char *dirname) {
 
 float weights[N_HIDDEN+1][1<<16];
 int main(int argc, char **argv) {
-    if (argc == 3) {
+    if ((argc == 4) && (argv[1][0] == '-')) {
         FILE **spam, **ham;
         int i;
 
-        spam = getfiles(argv[1]);
-        ham  = getfiles(argv[2]);
+        spam = getfiles(argv[2]);
+        ham  = getfiles(argv[3]);
 
         /* randomize weights */
         srand(time(NULL));
@@ -109,7 +109,28 @@ int main(int argc, char **argv) {
 
         /* evaluate spam */
         for (i = 0; spam[i]; ++i) {
-            printf("%f\n", evaluate(spam[i], weights));
+            fprintf(stderr, "%f\n", evaluate(spam[i], weights));
+        }
+
+        for (i = 0; spam[i]; ++i) {
+            fclose(spam[i]);
+        }
+        for (i = 0; ham[i]; ++i) {
+            fclose(ham[i]);
+        }
+
+        fwrite(weights, sizeof(weights), 1, stdout);
+    } else {
+        int i;
+
+        fread(weights, sizeof(weights), 1, stdin);
+
+        for (i = 1; i < argc; ++i) {
+            FILE *f = fopen(argv[i], "r");
+            if (f) {
+                printf("%s %f\n", argv[i], evaluate(f, weights));
+                fclose(f);
+            }
         }
     }
     return 0;

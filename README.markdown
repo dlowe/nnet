@@ -1,11 +1,11 @@
 ## Usage:
-    $ ./prog ioccc.brain < prog.c
+    $ gunzip -c ioccc.brain.gz | ./prog prog.c
     1.0
 
-    $ ./prog <spam directory> <ham directory> > my.brain
-    $ ./prog my.brain < some_spam
+    $ ./prog - <spam directory> <ham directory> > my.brain
+    $ ./prog some_spam < my.brain
     1.0
-    $ ./prog my.brain < some_ham
+    $ ./prog some_ham < my.brain
     0.0
 
 ## Synopsis:
@@ -27,6 +27,10 @@ You can train it by pointing it at any pair of directories.
 You must include the trailing directory separator on spam and ham directories (allows the
 program to be portable without wasting precious bytes on figuring out how to concatenate
 directory and file names...)
+
+Serialized "brain" files are only portable between systems with the same floating-point
+representation. Most compilers use the IEEE 754 single precision floating point format, and
+the included "brain" files use the same.
 
 ## Obfuscation:
 
