@@ -29,10 +29,6 @@ float logistic(float x) {
     return powf(1 + expf(-x), -1);
 }
 
-float dlogistic(float y) {
-    
-}
-
 float weighted_sum(float *inputs, float *weights, int count) {
     /* return weighted sum of inputs */
     int i;
@@ -107,12 +103,14 @@ int main(int argc, char **argv) {
     }
 
     if ((argc == 4) && (argv[1][0] == '-')) {
+        int n;
         FILE **spam, **ham;
 
         spam = getfiles(argv[2]);
         ham  = getfiles(argv[3]);
 
         /* evaluate spam */
+        for (n = 0; n < 1000; ++n) {
         for (i = 0; spam[i]; ++i) {
             float out = evaluate(spam[i], weights);
             float error, output_delta;
@@ -123,7 +121,7 @@ int main(int argc, char **argv) {
             error        = 1.0 - out;
             output_delta = dx_activate(bigrams + (1<<16), weights[N_HIDDEN], N_HIDDEN) * error;
 
-            fprintf(stderr, "output error: %f, output_delta: %f\n", error, output_delta);
+            /* fprintf(stderr, "output error: %f, output_delta: %f\n", error, output_delta);*/
 
             for (j = 0; j < N_HIDDEN; ++j) {
                 int k;
@@ -132,22 +130,23 @@ int main(int argc, char **argv) {
                 error        = output_delta * weights[N_HIDDEN][j];
                 hidden_delta = dx_activate(bigrams, weights[j], 1<<16) * error;
 
-                fprintf(stderr, "hidden %d error: %f, delta: %f\n", j, error, hidden_delta);
+                /* fprintf(stderr, "hidden %d error: %f, delta: %f\n", j, error, hidden_delta); */
 
                 /* update input weights for this hidden node */
                 for (k = 0; k < 1<<16; ++k) {
                     change = hidden_delta * bigrams[k];
-                    weights[j][k] += 0.2*change;
+                    weights[j][k] += 0.3*change;
                 }
 
                 /* update the output weight for this hidden node */
                 change = output_delta * bigrams[(1<<16) + j];
-                fprintf(stderr, "hidden %d weight: %f, change: %f\n", j, weights[N_HIDDEN][j], change);
-                weights[N_HIDDEN][j] += 0.2*change;
+                /* fprintf(stderr, "hidden %d weight: %f, change: %f\n", j, weights[N_HIDDEN][j], change); */
+                weights[N_HIDDEN][j] += 0.3*change;
             }
 
             out = evaluate(spam[i], weights);
             fprintf(stderr, "AFTER spam: %f\n", out);
+        }
         }
 
         /* evaluate ham */
