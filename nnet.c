@@ -63,6 +63,43 @@ float evaluate(FILE *f, float weights[][1<<16]) {
     return activate(bigrams + (1<<16), weights[N_HIDDEN], N_HIDDEN);
 }
 
+void backpropagate(FILE *f, float weights[][1<<16], float target) {
+    float out = evaluate(f, weights);
+    float error, output_delta;
+    int j;
+
+    fprintf(stderr, "%f: %f\n", target, out);
+
+    error        = target - out;
+    output_delta = dx_activate(bigrams + (1<<16), weights[N_HIDDEN], N_HIDDEN) * error;
+
+    /* fprintf(stderr, "output error: %f, output_delta: %f\n", error, output_delta);*/
+
+    for (j = 0; j < N_HIDDEN; ++j) {
+        int k;
+        float hidden_delta, change;
+
+        error        = output_delta * weights[N_HIDDEN][j];
+        hidden_delta = dx_activate(bigrams, weights[j], 1<<16) * error;
+
+        /* fprintf(stderr, "hidden %d error: %f, delta: %f\n", j, error, hidden_delta); */
+
+        /* update input weights for this hidden node */
+        for (k = 0; k < 1<<16; ++k) {
+            change = hidden_delta * bigrams[k];
+            weights[j][k] += 0.8*change;
+        }
+
+        /* update the output weight for this hidden node */
+        change = output_delta * bigrams[(1<<16) + j];
+        /* fprintf(stderr, "hidden %d weight: %f, change: %f\n", j, weights[N_HIDDEN][j], change); */
+        weights[N_HIDDEN][j] += 0.8*change;
+    }
+
+    out = evaluate(f, weights);
+    fprintf(stderr, "AFTER %f: %f\n", target, out);
+}
+
 FILE **getfiles(char *dirname) {
     DIR *d = opendir(dirname);
     FILE **files = NULL;
@@ -111,55 +148,12 @@ int main(int argc, char **argv) {
 
         /* evaluate spam */
         for (n = 0; n < 1000; ++n) {
-        for (i = 0; spam[i]; ++i) {
-            float out = evaluate(spam[i], weights);
-            float error, output_delta;
-            int j;
-
-            fprintf(stderr, "spam: %f\n", out);
-
-            error        = 1.0 - out;
-            output_delta = dx_activate(bigrams + (1<<16), weights[N_HIDDEN], N_HIDDEN) * error;
-
-            /* fprintf(stderr, "output error: %f, output_delta: %f\n", error, output_delta);*/
-
-            for (j = 0; j < N_HIDDEN; ++j) {
-                int k;
-                float hidden_delta, change;
-
-                error        = output_delta * weights[N_HIDDEN][j];
-                hidden_delta = dx_activate(bigrams, weights[j], 1<<16) * error;
-
-                /* fprintf(stderr, "hidden %d error: %f, delta: %f\n", j, error, hidden_delta); */
-
-                /* update input weights for this hidden node */
-                for (k = 0; k < 1<<16; ++k) {
-                    change = hidden_delta * bigrams[k];
-                    weights[j][k] += 0.3*change;
-                }
-
-                /* update the output weight for this hidden node */
-                change = output_delta * bigrams[(1<<16) + j];
-                /* fprintf(stderr, "hidden %d weight: %f, change: %f\n", j, weights[N_HIDDEN][j], change); */
-                weights[N_HIDDEN][j] += 0.3*change;
+            for (i = 0; spam[i]; ++i) {
+                backpropagate(spam[i], weights, 1.0);
             }
-
-            out = evaluate(spam[i], weights);
-            fprintf(stderr, "AFTER spam: %f\n", out);
-        }
-        }
-
-        /* evaluate ham */
-        for (i = 0; ham[i]; ++i) {
-            float out = evaluate(ham[i], weights);
-            float error, output_delta;
-
-            fprintf(stderr, "ham: %f\n", out);
-
-            error        = 0.0 - out;
-            output_delta = dx_activate(bigrams + (1<<16), weights[N_HIDDEN], N_HIDDEN) * error;
-
-            fprintf(stderr, "error: %f, output_delta: %f\n", error, output_delta);
+            for (i = 0; ham[i]; ++i) {
+                backpropagate(ham[i], weights, 0.0);
+            }
         }
 
         fwrite(weights, sizeof(weights), 1, stdout);
