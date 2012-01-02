@@ -41,3 +41,5 @@ the included "brain" files use the same.
  * [Logistic functions](http://en.wikipedia.org/wiki/Logistic_function)
  * [Graph of the logistic function in use](https://www.google.com/search?q=1/(1%2Bexp(-x)))
  * [public spam/ham corpora](http://spamassassin.apache.org/publiccorpus/)
+ * [Back propagation](http://www.learnartificialneuralnetworks.com/backpropagation.html)
+ * [Example in C++](http://www.codeproject.com/KB/recipes/BP.aspx)
