@@ -128,8 +128,24 @@ FILE **getfiles(char *dirname) {
     return files;
 }
 
-float weights[N_HIDDEN+1][1<<16];
+float **getinputs(FILE **files) {
+    int i;
+    float **inputs = NULL;
+
+    for (i = 0; files[i]; ++i) {
+        inputs = realloc(inputs, sizeof(float *) * (i + 1));
+        inputs[i] = bigrammer(files[i]);
+    }
+
+    /* null-termination */
+    inputs = realloc(inputs, sizeof(float *) * (i + 1));
+    inputs[i] = NULL;
+
+    return inputs;
+}
+
 int main(int argc, char **argv) {
+    float weights[N_HIDDEN+1][1<<16];
     int i;
 
     /* randomize weights */
@@ -143,18 +159,18 @@ int main(int argc, char **argv) {
 
     if ((argc == 4) && (argv[1][0] == '-')) {
         int n;
-        FILE **spam, **ham;
+        float **spam, **ham;
 
-        spam = getfiles(argv[2]);
-        ham  = getfiles(argv[3]);
+        spam = getinputs(getfiles(argv[2]));
+        ham  = getinputs(getfiles(argv[3]));
 
         /* evaluate spam */
         for (n = 0; n < 1000; ++n) {
             for (i = 0; spam[i]; ++i) {
-                backpropagate(bigrammer(spam[i]), weights, 1.0);
+                backpropagate(spam[i], weights, 1.0);
             }
             for (i = 0; ham[i]; ++i) {
-                backpropagate(bigrammer(ham[i]), weights, 0.0);
+                backpropagate(ham[i], weights, 0.0);
             }
         }
 
