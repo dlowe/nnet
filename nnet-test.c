@@ -4,13 +4,12 @@
 #include <stdarg.h>
 #include <float.h>
 
-extern float bigrams[256 * 256];
-extern void bigrammer(FILE *f);
+extern float *bigrammer(FILE *f);
 extern float logistic(float x);
 extern float weighted_sum(float *inputs, float *weights, int count);
 extern float activate(float *inputs, float *weights, int count);
 extern float dx_activate(float *inputs, float *weights, int count);
-extern float evaluate(FILE *f, float weights[][1<<16]);
+extern float evaluate(float *inputs, float weights[][1<<16]);
 extern FILE **getfiles(char *dirname);
 
 #define IDX(s) ((s[0]) * 256 + (s[1]))
@@ -20,14 +19,14 @@ void bigram_string(char *s, int len, int n, ...) {
     char *filename = mktemp(template);
     FILE *f = fopen(filename, "w+");
     int i;
+    float *bigrams;
     float expected_bigrams[256 * 256];
     va_list ap;
 
     write(fileno(f), s, len);
     fflush(f);
-    fseek(f, 0, SEEK_SET);
 
-    bigrammer(f);
+    bigrams = bigrammer(f);
 
     fclose(f);
     unlink(filename);
@@ -132,6 +131,7 @@ START_TEST (test_evaluate)
     char template[256] = "/tmp/tfile.XXXXXX";
     char *filename = mktemp(template);
     FILE *f = fopen(filename, "w+");
+    float *bigrams;
     float x;
     float weights[7][1<<16];
     int i, j;
@@ -145,15 +145,16 @@ START_TEST (test_evaluate)
             weights[i][j] = 0;
         }
     }
+    bigrams = bigrammer(f);
 
     /* evaluates to 0.5 */
-    x = evaluate(f, weights);
+    x = evaluate(bigrams, weights);
     fail_unless(x == 0.5);
 
     /* force it to zero */
     weights[0][IDX("aa")] = -7;
     weights[6][0] = -100000;
-    x = evaluate(f, weights);
+    x = evaluate(bigrams, weights);
     fail_unless(x == 0.0);
     weights[0][IDX("aa")] = 0;
     weights[6][0] = 0;
@@ -161,7 +162,7 @@ START_TEST (test_evaluate)
     /* force it to one */
     weights[1][IDX("aa")] = 7;
     weights[6][1] = 100000;
-    x = evaluate(f, weights);
+    x = evaluate(bigrams, weights);
     fail_unless(x == 1.0);
     weights[1][IDX("aa")] = 0;
     weights[6][1] = 0;
