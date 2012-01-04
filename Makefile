@@ -40,6 +40,16 @@ test_png: $(NAME)
 	./$(NAME) `find $(HOME) -name "*.png" -maxdepth 5` < png.brain
 	./$(NAME) `find $(HOME) -name "*.gif" -maxdepth 5` < png.brain
 
+.PHONY: test_ioccc
+test_ioccc: $(NAME)
+	./$(NAME) -1000 ./training/ioccc-1/ ./training/ioccc-0/ < /dev/null > ioccc.brain
+	./$(NAME) $(CODE) < ioccc.brain
+
+.PHONY: test_english
+test_english: $(NAME)
+	./$(NAME) -2000 ./training/english-1/ ./training/english-0/ < /dev/null > english.brain
+	./$(NAME) ./test/english-1/* ./test/english-0/* < english.brain
+
 $(NAME): test $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ)
 
@@ -48,4 +58,4 @@ clean:
 	rm -rf $(NAME) $(OBJ)
 	rm -rf prog.c prog
 	rm -rf $(TNAME) $(HACKOBJ)
-	rm -rf png.brain
+	rm -rf png.brain ioccc.brain

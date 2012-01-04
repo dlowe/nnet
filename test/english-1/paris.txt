@@ -1,0 +1,73 @@
+        The Paris constant  (the name , not the city, see below).
+
+1.0986419643941564857346689173435962108733483961083565505654416338483772464788\
+93852023881297920481791
+
+
+
+        Paul Zimmermann and Philippe Flajolet (INRIA, France) computed
+        the above decimal expansion.  Flajolet used the formula
+
+
+                            infinity
+                            --------'
+                           '  |  |           phi
+               C     =        |  |    2 ------------
+                              |  |      phi + phi[m]
+                              |  |
+                             m = 2
+
+        where phi is the Golden mean and the sequence phi[m], m=1,2,3,...
+        is defined recursively by
+
+                phi[1] = 1,     phi[m] = sqrt(1+phi[m-1]), m=2,3,4,...
+        This gives a stable scheme with geometric convergence with M factors 
+        giving an error of about (2 phi)^{-M}.  For more information, 
+        visit the web= page
+
+                http://pauillac.inria.fr/algo/bsolve/gold/infrad.html
+
+        or read the article
+
+                R. B. Paris, An asymptotic approximation connected with the
+        Golden number, Amer. Math. Monthly 94 (1987) 272-278.
+   
+        *****************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# This is the electronic signature for Plouffe's Inverter        #
+# Ceci est la signature électronique pour l'Inverseur de Plouffe #
+# Copyright : Simon Plouffe/Plouffe's Inverter (c) 1986.         #
+# http://www.lacim.uqam.ca/pi                                    #

@@ -31,10 +31,19 @@ The ioccc-1 corpus was obtained by taking all files matching /[a-z]+\.c/ from
 the all.tar.gz download from www.ioccc.org.
 
 The ioccc-0 corpus was obtained by searching github.com for "language:c",
-and using some sed/curl scripts, doing "raw" downloads of the files on the
+and using some sed+curl scripting, doing "raw" downloads of the files on the
 first 10 pages of results whose filenames matched /.*\.c/.
 
-This is a completely inappropriate use of a neural network :)
+Results:
+ * using these corpora as a training set
+ * using pre- and post-obfuscation versions of its own source code as a test
+   set
+ * training for 1000 iterations
+ * reports that the pre-obfuscation version has 0.NNN probability of being an
+   ioccc winning entry
+ * reports that the post-obfuscation version has 0.NNN probability of being an
+   ioccc winning entry
+ * the predictive accuracy is TBD by the outcome of the contest ;)
 
 ### png corpora
 
@@ -49,16 +58,32 @@ Results:
  * using several hundred random *.gif and *.png files from my home computer as
    a test set
  * using a rough "early stopping" algorithm over 1000-iteration training runs,
-   which stopped after 18,000 iterations.
+   which stopped after 18000 iterations.
  * interpreting output of "> 0.5" as "probably a .png" and "< 0.5" as "probably
    a .gif"
  * produced a network with about 81% accuracy
 
 ### english corpora
 
+The english-1 corpus was obtained by manually scraping the first results from
+a https://www.google.com/webhp?lr=lang_en search for "paris filetype:txt".
+
+The english-0 corpus was obtained by manually scraping the first results from
+a https://www.google.com/webhp?lr=lang_fr search for "paris filetype:txt".
+
+Results:
+ * using these corpora as a training set
+ * using several dozen additional text files (obtained by the same methods)
+   as a test set
+ * using a rough "early stopping" algorithm over 1000-iteration training runs,
+   which stopped after 2000 iterations.
+ * interpreting output of "> 0.5" as "probably english" and "< 0.5" as
+   "probably french"
+ * produced a network with 100% accuracy
+
 ## Limitations
-The topology of the network is fixed: 2^16 inputs, 6 hidden neurons, and one
-output.
+The topology of the network is fixed: 2^16 input neurons, 6 hidden neurons, and
+one output neuron.
 
 The learning rate is hard-coded to 0.3.
 
@@ -73,15 +98,9 @@ Making sure not to overfit the network to the training data is a bit of a
 black art. I used a wrapper script to implement early stopping with a set of
 test data separated from the training data.
 
+Bad input (e.g. nonexistent files, non-numeric number of iterations, etc.)
+tends to result in empty output.
+
 ## Obfuscation:
 
-## Links:
- * [Example MLP in java](https://github.com/jimmikaelkael/multi-layer-perceptron)
- * [Feed-forward neural networks](http://en.wikipedia.org/wiki/Feedforward_neural_network)
- * [Bigram](http://en.wikipedia.org/wiki/Bigram)
- * [Logistic functions](http://en.wikipedia.org/wiki/Logistic_function)
- * [Graph of the logistic function in use](https://www.google.com/search?q=1/(1%2Bexp(-x)))
- * [public spam/ham corpora](http://spamassassin.apache.org/publiccorpus/)
- * [Back propagation](http://www.learnartificialneuralnetworks.com/backpropagation.html)
- * [Example in C++](http://www.codeproject.com/KB/recipes/BP.aspx)
- * [Nice tutorial](http://www.shiffman.net/teaching/nature/nn/)
+Zombies!
