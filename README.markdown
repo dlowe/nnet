@@ -25,6 +25,37 @@ directory's contents will take on a desired output value of 1, and the last
 directory's contents will take on a desired output value of 0; intervening
 directories will take intermediate desired output values.
 
+### ioccc corpora
+
+The ioccc-1 corpus was obtained by taking all files matching /[a-z]+\.c/ from
+the all.tar.gz download from www.ioccc.org.
+
+The ioccc-0 corpus was obtained by searching github.com for "language:c",
+and using some sed/curl scripts, doing "raw" downloads the first 10 pages of
+results whose filenames matched /.*\.c/.
+
+This is a completely inappropriate use of a neural network :)
+
+### png corpora
+
+The png-1 corpus was obtained by manually scraping the first results from an
+images.google.com search for "obfuscate filetype:png".
+
+The png-0 corpus was obtained by manually scraping the first results from an
+images.google.com search for "obfuscate filetype:gif".
+
+Results:
+ * using these corpora as a training set
+ * using several hundred random *.gif and *.png files from my home computer as
+   a test set
+ * using a rough "early stopping" algorithm over 1000-iteration training runs,
+   which stopped after 17,000 iterations.
+ * interpreting output of "> 0.5" as "probably a .png" and "< 0.5" as "probably
+   a .gif"
+ * produced a network with about a 90% accuracy
+
+### english corpora
+
 ## Limitations
 You must include the trailing directory separator on training directories
 (this allows the program to be portable without wasting precious bytes on
