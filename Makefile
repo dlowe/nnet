@@ -58,4 +58,4 @@ clean:
 	rm -rf $(NAME) $(OBJ)
 	rm -rf prog.c prog
 	rm -rf $(TNAME) $(HACKOBJ)
-	rm -rf png.brain ioccc.brain
+	rm -rf png.brain ioccc.brain english.brain
