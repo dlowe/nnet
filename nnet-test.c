@@ -10,7 +10,7 @@ extern float weighted_sum(float *inputs, float *weights, int count);
 extern float activate(float *inputs, float *weights, int count);
 extern float dx_activate(float *inputs, float *weights, int count);
 extern float evaluate(float *inputs, float weights[][1<<16]);
-extern FILE **getfiles(char *dirname);
+extern float **getfiles(char *dirname);
 
 #define IDX(s) ((s[0]) * 256 + (s[1]))
 
@@ -175,7 +175,7 @@ END_TEST
 
 START_TEST (test_getfiles)
 {
-    FILE **result;
+    float **result;
     char template[256] = "/tmp/tdir.XXXXXX";
     char *dirname, dirname_slash[1024];
     int i, j;

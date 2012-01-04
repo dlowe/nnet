@@ -3,7 +3,7 @@ CODE := $(NAME).c
 OBJ  := $(CODE:.c=.o)
 
 CC     := gcc
-CFLAGS := -ggdb -std=c89 -Wall -Werror -pedantic-errors
+CFLAGS := -ggdb -std=c89 -Wall -Werror -pedantic-errors -O3
 
 .PHONY: all
 all: $(NAME)

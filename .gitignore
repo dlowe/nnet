@@ -3,4 +3,5 @@ nnet.o
 nnet-test
 no-main-nnet.o
 *.brain
+*.judge
 *.swp

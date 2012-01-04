@@ -62,12 +62,13 @@ float evaluate(float *inputs, float weights[][1<<16]) {
     return activate(inputs + (1<<16), weights[N_HIDDEN], N_HIDDEN);
 }
 
+#define RATE 0.3
 void backpropagate(float *inputs, float weights[][1<<16], float target) {
     float out = evaluate(inputs, weights);
     float error, output_delta;
     int j;
 
-    /* fprintf(stderr, "%f: %f\n", target, out); */
+    fprintf(stderr, "%f: %f\n", target, out);
 
     error        = target - out;
     output_delta = dx_activate(inputs + (1<<16), weights[N_HIDDEN], N_HIDDEN) * error;
@@ -86,53 +87,41 @@ void backpropagate(float *inputs, float weights[][1<<16], float target) {
         /* update input weights for this hidden node */
         for (k = 0; k < 1<<16; ++k) {
             change = hidden_delta * inputs[k];
-            weights[j][k] += 0.3*change;
+            weights[j][k] += RATE * change;
         }
 
         /* update the output weight for this hidden node */
         change = output_delta * inputs[(1<<16) + j];
         /* fprintf(stderr, "hidden %d weight: %f, change: %f\n", j, weights[N_HIDDEN][j], change); */
-        weights[N_HIDDEN][j] += 0.3*change;
+        weights[N_HIDDEN][j] += RATE * change;
     }
 }
 
-FILE **getfiles(char *dirname) {
+float **getfiles(char *dirname) {
     DIR *d = opendir(dirname);
-    FILE **files = NULL;
     int i = 0;
     struct dirent *de;
+    float **inputs = NULL;
 
     while (d && (de = readdir(d))) {
         if (de->d_type == DT_REG) {
             char full_name[512];
+            FILE *f;
+
             snprintf(full_name, 512, "%s%s", dirname, de->d_name);
 
-            files = realloc(files, sizeof(FILE *) * (i + 1));
-            files[i] = fopen(full_name, "r");
-            if (files[i]) {
+            f = fopen(full_name, "r");
+            if (f) {
+                inputs = realloc(inputs, sizeof(float *) * (i + 1));
+                inputs[i] = bigrammer(f);
                 ++i;
             }
+            fclose(f);
         }
     }
 
     /* null-terminate */
-    files = realloc(files, sizeof(FILE *) * (i + 1));
-    files[i] = NULL;
-
-    return files;
-}
-
-float **getinputs(FILE **files) {
-    int i;
-    float **inputs = NULL;
-
-    for (i = 0; files[i]; ++i) {
-        inputs = realloc(inputs, sizeof(float *) * (i + 1));
-        inputs[i] = bigrammer(files[i]);
-    }
-
-    /* null-termination */
-    inputs = realloc(inputs, sizeof(float *) * (i + 1));
+    inputs = realloc(inputs, sizeof(FILE *) * (i + 1));
     inputs[i] = NULL;
 
     return inputs;
@@ -158,7 +147,7 @@ int main(int argc, char **argv) {
 
         training = malloc(sizeof(float **) * (argc - 2));
         for (i = 0; i < argc - 2; ++i) {
-            training[i] = getinputs(getfiles(argv[i + 2]));
+            training[i] = getfiles(argv[i + 2]);
         }
 
         for (n = 0; n < atoi(&(argv[1][1])); ++n) {

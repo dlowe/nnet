@@ -1,6 +1,6 @@
 ## Usage:
     $ gunzip ioccc.tar.gz
-    $ ./prog -20 ./ioccc-1/ ./ioccc-0/ < /dev/null > ioccc.judge
+    $ ./prog -400 ./ioccc-1/ ./ioccc-0/ < /dev/null > ioccc.judge
     ....................
     $ ./prog prog.c < ioccc.judge
     prog.c 0.981931
@@ -26,18 +26,19 @@ directory's contents will take on a desired output value of 0; intervening
 directories will take intermediate desired output values.
 
 ## Limitations
-You must include the trailing directory separator on spam and ham directories (allows the
-program to be portable without wasting precious bytes on figuring out how to concatenate
-directory and file names...)
+You must include the trailing directory separator on training directories
+(this allows the program to be portable without wasting precious bytes on
+figuring out how to concatenate directory and file names...)
 
-Serialized network files are only portable between systems with the same floating-point
-representation.
+Serialized network files are only portable between systems with the same
+floating-point representation.
 
-Making sure not to overfit the network to the training data is a bit of a black art. One
-could use a wrapper script to implement early stopping with a set of test data separated
-from the training data.
+Making sure not to overfit the network to the training data is a bit of a
+black art. One could use a wrapper script to implement early stopping with a
+set of test data separated from the training data.
 
-The topology of the network is fixed: 2^16 inputs, 6 hidden neurons, and one output.
+The topology of the network is fixed: 2^16 inputs, 6 hidden neurons, and one
+output.
 
 The learning rate is hard-coded to 0.3.
 
