@@ -50,8 +50,8 @@ float activate(float *inputs, float *weights, int count) {
 
 float dx_activate(float *inputs, float *weights, int count) {
     /* given N inputs and weights, compute the derivative of the activation function */
-    float i = weighted_sum(inputs, weights, count);
-    return logistic(i) * logistic(-i);
+    float l = logistic(weighted_sum(inputs, weights, count));
+    return l * (1.0 - l);
 }
 
 #define N_HIDDEN 6
@@ -89,17 +89,17 @@ void backpropagate(float *inputs, float weights[][1<<16], float target) {
         /* update input weights for this hidden node */
         for (k = 0; k < 1<<16; ++k) {
             change = hidden_delta * inputs[k];
-            weights[j][k] += 0.8*change;
+            weights[j][k] += 0.3*change;
         }
 
         /* update the output weight for this hidden node */
         change = output_delta * inputs[(1<<16) + j];
         /* fprintf(stderr, "hidden %d weight: %f, change: %f\n", j, weights[N_HIDDEN][j], change); */
-        weights[N_HIDDEN][j] += 0.8*change;
+        weights[N_HIDDEN][j] += 0.3*change;
     }
 
     out = evaluate(inputs, weights);
-    /* fprintf(stderr, "AFTER %f: %f\n", target, out); */
+    fprintf(stderr, "AFTER %f: %f\n", target, out);
 }
 
 FILE **getfiles(char *dirname) {
@@ -159,20 +159,21 @@ int main(int argc, char **argv) {
 
     fread(weights, sizeof(weights), 1, stdin);
 
-    if ((argc == 4) && (argv[1][0] == '-')) {
+    if (argv[1][0] == '-') {
         int n;
-        float **spam, **ham;
+        float ***training;
 
-        spam = getinputs(getfiles(argv[2]));
-        ham  = getinputs(getfiles(argv[3]));
+        training = malloc(sizeof(float **) * (argc - 2));
+        for (i = 0; i < argc - 2; ++i) {
+            training[i] = getinputs(getfiles(argv[i + 2]));
+        }
 
-        /* evaluate spam */
         for (n = 0; n < 1000; ++n) {
-            for (i = 0; spam[i]; ++i) {
-                backpropagate(spam[i], weights, 1.0);
-            }
-            for (i = 0; ham[i]; ++i) {
-                backpropagate(ham[i], weights, 0.0);
+            for (i = 0; i < argc - 2; ++i) {
+                int j;
+                for (j = 0; training[i][j]; ++j) {
+                    backpropagate(training[i][j], weights, 1.0 - (float)i / (float)(argc - 3));
+                }
             }
         }
 
