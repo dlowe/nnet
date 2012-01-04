@@ -34,6 +34,12 @@ test: $(TNAME)
 	@echo "testing README.markdown"
 	@Markdown.pl README.markdown >/dev/null
 
+.PHONY: test_png
+test_png: $(NAME)
+	./$(NAME) -18000 ./training/png-1/ ./training/png-0/ < /dev/null > png.brain
+	./$(NAME) `find $(HOME) -name "*.png" -maxdepth 5` < png.brain
+	./$(NAME) `find $(HOME) -name "*.gif" -maxdepth 5` < png.brain
+
 $(NAME): test $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ)
 
@@ -42,3 +48,4 @@ clean:
 	rm -rf $(NAME) $(OBJ)
 	rm -rf prog.c prog
 	rm -rf $(TNAME) $(HACKOBJ)
+	rm -rf png.brain

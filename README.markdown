@@ -16,9 +16,9 @@ This is a multilayer perceptron (a feedforward artificial neural network)
 which can be trained, using on-line backpropagation, to classify input files. I've
 included three training corpora to play with:
 
- * english.tar.gz: train the program to differentiate english from french text
- * png.tar.gz: train the program to differentiate .png from .gif images
  * ioccc.tar.gz: train the program to identify winning IOCCC entries
+ * png.tar.gz: train the program to differentiate .png from .gif images
+ * english.tar.gz: train the program to differentiate english from french text
 
 ... but you can train it by pointing it at any set of directories. The first
 directory's contents will take on a desired output value of 1, and the last
@@ -31,8 +31,8 @@ The ioccc-1 corpus was obtained by taking all files matching /[a-z]+\.c/ from
 the all.tar.gz download from www.ioccc.org.
 
 The ioccc-0 corpus was obtained by searching github.com for "language:c",
-and using some sed/curl scripts, doing "raw" downloads the first 10 pages of
-results whose filenames matched /.*\.c/.
+and using some sed/curl scripts, doing "raw" downloads of the files on the
+first 10 pages of results whose filenames matched /.*\.c/.
 
 This is a completely inappropriate use of a neural network :)
 
@@ -49,14 +49,19 @@ Results:
  * using several hundred random *.gif and *.png files from my home computer as
    a test set
  * using a rough "early stopping" algorithm over 1000-iteration training runs,
-   which stopped after 17,000 iterations.
+   which stopped after 18,000 iterations.
  * interpreting output of "> 0.5" as "probably a .png" and "< 0.5" as "probably
    a .gif"
- * produced a network with about a 90% accuracy
+ * produced a network with about 81% accuracy
 
 ### english corpora
 
 ## Limitations
+The topology of the network is fixed: 2^16 inputs, 6 hidden neurons, and one
+output.
+
+The learning rate is hard-coded to 0.3.
+
 You must include the trailing directory separator on training directories
 (this allows the program to be portable without wasting precious bytes on
 figuring out how to concatenate directory and file names...)
@@ -65,13 +70,8 @@ Serialized network files are only portable between systems with the same
 floating-point representation.
 
 Making sure not to overfit the network to the training data is a bit of a
-black art. One could use a wrapper script to implement early stopping with a
-set of test data separated from the training data.
-
-The topology of the network is fixed: 2^16 inputs, 6 hidden neurons, and one
-output.
-
-The learning rate is hard-coded to 0.3.
+black art. I used a wrapper script to implement early stopping with a set of
+test data separated from the training data.
 
 ## Obfuscation:
 
