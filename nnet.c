@@ -70,7 +70,7 @@ void backpropagate(float *inputs, float weights[][1<<16], float target) {
     float error, output_delta;
     int j;
 
-    fprintf(stderr, "%f: %f\n", target, out);
+    /* fprintf(stderr, "%f: %f\n", target, out); */
 
     error        = target - out;
     output_delta = dx_activate(inputs + (1<<16), weights[N_HIDDEN], N_HIDDEN) * error;
@@ -99,7 +99,7 @@ void backpropagate(float *inputs, float weights[][1<<16], float target) {
     }
 
     out = evaluate(inputs, weights);
-    fprintf(stderr, "AFTER %f: %f\n", target, out);
+    /* fprintf(stderr, "AFTER %f: %f\n", target, out); */
 }
 
 FILE **getfiles(char *dirname) {
@@ -157,6 +157,8 @@ int main(int argc, char **argv) {
         }
     }
 
+    fread(weights, sizeof(weights), 1, stdin);
+
     if ((argc == 4) && (argv[1][0] == '-')) {
         int n;
         float **spam, **ham;
@@ -176,8 +178,6 @@ int main(int argc, char **argv) {
 
         fwrite(weights, sizeof(weights), 1, stdout);
     } else {
-        fread(weights, sizeof(weights), 1, stdin);
-
         for (i = 1; i < argc; ++i) {
             FILE *f = fopen(argv[i], "r");
             if (f) {

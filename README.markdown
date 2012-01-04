@@ -1,25 +1,23 @@
 ## Usage:
-    $ gunzip -c ioccc.brain.gz | ./prog prog.c
-    1.0
-
-    $ ./prog - <spam directory> <ham directory> > my.brain
-    $ ./prog some_spam < my.brain
-    1.0
-    $ ./prog some_ham < my.brain
-    0.0
+    $ guzip ioccc.tar.gz
+    $ ./prog - ./ioccc-1/ ./ioccc-0/ < /dev/null > ioccc.judge
+    $ ./prog prog.c < ioccc.judge
+    prog.c 1.0
+    $ ./prog squeaky_clean.c < ioccc.judge
+    squeaky_clean.c 0.0
 
 ## Synopsis:
-This is an artificially intelligent judging tool designed to help the IOCCC
-judges. Here's to shorter, more frequent contests!
+This is an artificially intelligent judging tool to help the IOCCC judges.
+Here's to shorter, more frequent contests!
 
 ## Description:
 This is a multilayer perceptron (a feedforward artificial neural network)
-which can be trained, using backpropagation, to classify input files. I've
-included three trained brains:
+which can be trained, using on-line backpropagation, to classify input files. I've
+included three training corpora:
 
- * ioccc.brain, trained to identify winning IOCCC entries
- * spam.brain, trained to identify email spam
- * english.brain, trained to identify english text
+ * english.tar.gz: train the program to identify english text
+ * png.tar.gz: train the program to identify .png image files
+ * ioccc.tar.gz: train the program to identify winning IOCCC entries
 
 You can train it by pointing it at any pair of directories.
 
@@ -31,6 +29,10 @@ directory and file names...)
 Serialized "brain" files are only portable between systems with the same floating-point
 representation. Most compilers use the IEEE 754 single precision floating point format, and
 the included "brain" files use the same.
+
+Making sure not to overfit the network to the training data is a bit of a black art. One
+could use a wrapper script to implement early stopping with a set of test data separated
+from the training data.
 
 ## Obfuscation:
 
