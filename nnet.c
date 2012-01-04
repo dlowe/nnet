@@ -2,7 +2,6 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <math.h>
-#include <stdlib.h>
 #include <time.h>
 
 float *bigrammer(FILE *f) {
@@ -139,16 +138,18 @@ int main(int argc, char **argv) {
         int n;
         float ***training;
 
-        training = malloc(sizeof(float **) * (argc - 2));
-        for (i = 0; i < argc - 2; ++i) {
+        argc -= 2;
+
+        training = malloc(sizeof(float **) * argc);
+        for (i = 0; i < argc; ++i) {
             training[i] = getfiles(argv[i + 2]);
         }
 
         for (n = 0; n < atoi(&(argv[1][1])); ++n) {
             float error = 0.0;
-            for (i = 0; i < argc - 2; ++i) {
+            for (i = 0; i < argc; ++i) {
                 for (j = 0; training[i][j]; ++j) {
-                    error += backpropagate(training[i][j], weights, 1.0 - (float)i / (float)(argc - 3));
+                    error += backpropagate(training[i][j], weights, 1.0 - (float)i / (float)(argc - 1));
                 }
             }
             fprintf(stderr, "%d: %f\n", n, error);
