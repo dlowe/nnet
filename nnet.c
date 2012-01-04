@@ -32,10 +32,9 @@ float logistic(float x) {
 
 float weighted_sum(float *inputs, float *weights, int count) {
     /* return weighted sum of inputs */
-    int i;
     float s = 0;
-    for (i = 0; i < count; ++i) {
-        s += inputs[i] * weights[i];
+    for (--count; count >= 0; --count) {
+        s += inputs[count] * weights[count];
     }
     return s;
 }
@@ -63,17 +62,13 @@ float evaluate(float *inputs, float weights[][1<<16]) {
 }
 
 #define RATE 0.3
-void backpropagate(float *inputs, float weights[][1<<16], float target) {
+float backpropagate(float *inputs, float weights[][1<<16], float target) {
     float out = evaluate(inputs, weights);
     float error, output_delta;
     int j;
 
-    fprintf(stderr, "%f: %f\n", target, out);
-
     error        = target - out;
     output_delta = dx_activate(inputs + (1<<16), weights[N_HIDDEN], N_HIDDEN) * error;
-
-    /* fprintf(stderr, "output error: %f, output_delta: %f\n", error, output_delta);*/
 
     for (j = 0; j < N_HIDDEN; ++j) {
         int k;
@@ -81,8 +76,6 @@ void backpropagate(float *inputs, float weights[][1<<16], float target) {
 
         error        = output_delta * weights[N_HIDDEN][j];
         hidden_delta = dx_activate(inputs, weights[j], 1<<16) * error;
-
-        /* fprintf(stderr, "hidden %d error: %f, delta: %f\n", j, error, hidden_delta); */
 
         /* update input weights for this hidden node */
         for (k = 0; k < 1<<16; ++k) {
@@ -92,9 +85,10 @@ void backpropagate(float *inputs, float weights[][1<<16], float target) {
 
         /* update the output weight for this hidden node */
         change = output_delta * inputs[(1<<16) + j];
-        /* fprintf(stderr, "hidden %d weight: %f, change: %f\n", j, weights[N_HIDDEN][j], change); */
         weights[N_HIDDEN][j] += RATE * change;
     }
+
+    return powf(target - out, 2);
 }
 
 float **getfiles(char *dirname) {
@@ -151,15 +145,14 @@ int main(int argc, char **argv) {
         }
 
         for (n = 0; n < atoi(&(argv[1][1])); ++n) {
+            float error = 0.0;
             for (i = 0; i < argc - 2; ++i) {
                 for (j = 0; training[i][j]; ++j) {
-                    backpropagate(training[i][j], weights, 1.0 - (float)i / (float)(argc - 3));
+                    error += backpropagate(training[i][j], weights, 1.0 - (float)i / (float)(argc - 3));
                 }
             }
-            fprintf(stderr, ".");
-            fflush(stderr);
+            fprintf(stderr, "%d: %f\n", n, error);
         }
-        fprintf(stderr, "\n");
 
         fwrite(weights, sizeof(weights), 1, stdout);
     } else {
