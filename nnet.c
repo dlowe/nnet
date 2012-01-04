@@ -7,15 +7,12 @@
 
 float *bigrammer(FILE *f) {
     float *bigrams = malloc(sizeof(float) * 1<<17);
-    int p, c, n;
-
-    fseek(f, 0, SEEK_SET);
+    int p = getc(f), c, n;
 
     /* init bigrams to 0 (and init n to 0!) */
     for (n = 1<<16; n > 0; --n) bigrams[n-1] = 0;
 
     /* walk stream and remember bigrams */
-    p = getc(f);
     while ((c = getc(f)) != EOF) {
         ++bigrams[256 * p + c];
         ++n;
@@ -97,9 +94,6 @@ void backpropagate(float *inputs, float weights[][1<<16], float target) {
         /* fprintf(stderr, "hidden %d weight: %f, change: %f\n", j, weights[N_HIDDEN][j], change); */
         weights[N_HIDDEN][j] += 0.3*change;
     }
-
-    out = evaluate(inputs, weights);
-    fprintf(stderr, "AFTER %f: %f\n", target, out);
 }
 
 FILE **getfiles(char *dirname) {
@@ -146,12 +140,11 @@ float **getinputs(FILE **files) {
 
 int main(int argc, char **argv) {
     float weights[N_HIDDEN+1][1<<16];
-    int i;
+    int i, j;
 
     /* randomize weights */
     srand(time(NULL));
     for (i = 0; i < N_HIDDEN+1; ++i) {
-        int j;
         for (j = 0; j < 1<<16; ++j) {
             weights[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
         }
@@ -159,7 +152,7 @@ int main(int argc, char **argv) {
 
     fread(weights, sizeof(weights), 1, stdin);
 
-    if (argv[1][0] == '-') {
+    if (*argv[1] == '-') {
         int n;
         float ***training;
 
@@ -168,21 +161,23 @@ int main(int argc, char **argv) {
             training[i] = getinputs(getfiles(argv[i + 2]));
         }
 
-        for (n = 0; n < 1000; ++n) {
+        for (n = 0; n < atoi(&(argv[1][1])); ++n) {
             for (i = 0; i < argc - 2; ++i) {
-                int j;
                 for (j = 0; training[i][j]; ++j) {
                     backpropagate(training[i][j], weights, 1.0 - (float)i / (float)(argc - 3));
                 }
             }
+            fprintf(stderr, ".");
+            fflush(stderr);
         }
+        fprintf(stderr, "\n");
 
         fwrite(weights, sizeof(weights), 1, stdout);
     } else {
         for (i = 1; i < argc; ++i) {
             FILE *f = fopen(argv[i], "r");
             if (f) {
-                printf("%s %f\n", argv[i], evaluate(bigrammer(f), weights));
+                fprintf(stderr, "%s %f\n", argv[i], evaluate(bigrammer(f), weights));
             }
         }
     }

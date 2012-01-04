@@ -1,10 +1,11 @@
 ## Usage:
-    $ guzip ioccc.tar.gz
-    $ ./prog - ./ioccc-1/ ./ioccc-0/ < /dev/null > ioccc.judge
+    $ gunzip ioccc.tar.gz
+    $ ./prog -20 ./ioccc-1/ ./ioccc-0/ < /dev/null > ioccc.judge
+    ....................
     $ ./prog prog.c < ioccc.judge
-    prog.c 1.0
+    prog.c 0.981931
     $ ./prog squeaky_clean.c < ioccc.judge
-    squeaky_clean.c 0.0
+    squeaky_clean.c 0.013124
 
 ## Synopsis:
 This is an artificially intelligent judging tool to help the IOCCC judges.
@@ -13,26 +14,32 @@ Here's to shorter, more frequent contests!
 ## Description:
 This is a multilayer perceptron (a feedforward artificial neural network)
 which can be trained, using on-line backpropagation, to classify input files. I've
-included three training corpora:
+included three training corpora to play with:
 
- * english.tar.gz: train the program to identify english text
- * png.tar.gz: train the program to identify .png image files
+ * english.tar.gz: train the program to differentiate english from french text
+ * png.tar.gz: train the program to differentiate .png from .gif images
  * ioccc.tar.gz: train the program to identify winning IOCCC entries
 
-You can train it by pointing it at any pair of directories.
+... but you can train it by pointing it at any set of directories. The first
+directory's contents will take on a desired output value of 1, and the last
+directory's contents will take on a desired output value of 0; intervening
+directories will take intermediate desired output values.
 
 ## Limitations
 You must include the trailing directory separator on spam and ham directories (allows the
 program to be portable without wasting precious bytes on figuring out how to concatenate
 directory and file names...)
 
-Serialized "brain" files are only portable between systems with the same floating-point
-representation. Most compilers use the IEEE 754 single precision floating point format, and
-the included "brain" files use the same.
+Serialized network files are only portable between systems with the same floating-point
+representation.
 
 Making sure not to overfit the network to the training data is a bit of a black art. One
 could use a wrapper script to implement early stopping with a set of test data separated
 from the training data.
+
+The topology of the network is fixed: 2^16 inputs, 6 hidden neurons, and one output.
+
+The learning rate is hard-coded to 0.3.
 
 ## Obfuscation:
 

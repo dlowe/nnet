@@ -25,6 +25,7 @@ void bigram_string(char *s, int len, int n, ...) {
 
     write(fileno(f), s, len);
     fflush(f);
+    fseek(f, 0, SEEK_SET);
 
     bigrams = bigrammer(f);
 
