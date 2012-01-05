@@ -33,42 +33,36 @@ float weighted_sum(float *inputs, float *weights, int c) {
     return s;
 }
 
-float activate(float *inputs, float *weights, int c) {
-    return logistic(weighted_sum(inputs, weights, c));
-}
-
-float dx_activate(float *inputs, float *weights, int c) {
-    float l = logistic(weighted_sum(inputs, weights, c));
-    return l * (1.0 - l);
-}
-
 float evaluate(float *inputs, float weights[][1<<16]) {
     int i;
 
     for (i = 0; i < 6; ++i) {
-        inputs[(1<<16) + i] = activate(inputs, weights[i], 1<<16);
+        inputs[(1<<16) + i] = logistic(weighted_sum(inputs, weights[i], 1<<16));
+        weights[6][50+i] = inputs[(1<<16) + i] * (1.0 - inputs[(1<<16) + i]);
     }
-    return activate(inputs + (1<<16), weights[6], 6);
+    weights[6][81] = logistic(weighted_sum(inputs + (1<<16), weights[6], 6));
+    weights[6][82] = weights[6][81] * (1.0 - weights[6][81]);
+
+    return weights[6][81];
 }
 
 float backpropagate(float *inputs, float weights[][1<<16], float n) {
-    float error, output_delta, hidden_delta;
     int j, k;
 
-    error        = n - evaluate(inputs, weights);
-    output_delta = dx_activate(inputs + (1<<16), weights[6], 6) * error;
+    weights[6][13] = n - evaluate(inputs, weights);
+    weights[6][19] = weights[6][82] * weights[6][13];
 
     for (j = 0; j < 6; ++j) {
-        hidden_delta = dx_activate(inputs, weights[j], 1<<16) * output_delta * weights[6][j];
+        weights[6][34] = weights[6][50 + j] * weights[6][19] * weights[6][j];
 
         for (k = 0; k < 1<<16; ++k) {
-            weights[j][k] += 0.3 * hidden_delta * inputs[k];
+            weights[j][k] += 0.3 * weights[6][34] * inputs[k];
         }
 
-        weights[6][j] += 0.3 * output_delta * inputs[(1<<16) + j];
+        weights[6][j] += 0.3 * weights[6][19] * inputs[(1<<16) + j];
     }
 
-    return powf(error, 2);
+    return powf(weights[6][13], 2);
 }
 
 float **getfiles(char *dirname) {
