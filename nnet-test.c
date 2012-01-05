@@ -4,7 +4,7 @@
 #include <stdarg.h>
 #include <float.h>
 
-extern float *bigrammer(FILE *f);
+extern float *dismember(FILE *f);
 extern float logistic(float x);
 extern float weighted_sum(float *inputs, float *weights, int count);
 extern float activate(float *inputs, float *weights, int count);
@@ -27,7 +27,7 @@ void bigram_string(char *s, int len, int n, ...) {
     fflush(f);
     fseek(f, 0, SEEK_SET);
 
-    bigrams = bigrammer(f);
+    bigrams = dismember(f);
 
     fclose(f);
     unlink(filename);
@@ -146,7 +146,7 @@ START_TEST (test_evaluate)
             weights[i][j] = 0;
         }
     }
-    bigrams = bigrammer(f);
+    bigrams = dismember(f);
 
     /* evaluates to 0.5 */
     x = evaluate(bigrams, weights);

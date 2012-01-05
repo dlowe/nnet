@@ -4,7 +4,7 @@
 #include <math.h>
 #include <time.h>
 
-float *bigrammer(FILE *f) {
+float *dismember(FILE *f) {
     float *bigrams = malloc(sizeof(float) * 1<<17);
     int p = getc(f), c, n;
 
@@ -25,59 +25,50 @@ float logistic(float x) {
     return powf(1 + expf(-x), -1);
 }
 
-float weighted_sum(float *inputs, float *weights, int count) {
+float weighted_sum(float *inputs, float *weights, int c) {
     float s = 0;
-    for (--count; count >= 0; --count) {
-        s += inputs[count] * weights[count];
+    for (--c; c >= 0; --c) {
+        s += inputs[c] * weights[c];
     }
     return s;
 }
 
-float activate(float *inputs, float *weights, int count) {
-    return logistic(weighted_sum(inputs, weights, count));
+float activate(float *inputs, float *weights, int c) {
+    return logistic(weighted_sum(inputs, weights, c));
 }
 
-float dx_activate(float *inputs, float *weights, int count) {
-    float l = logistic(weighted_sum(inputs, weights, count));
+float dx_activate(float *inputs, float *weights, int c) {
+    float l = logistic(weighted_sum(inputs, weights, c));
     return l * (1.0 - l);
 }
 
-#define N_HIDDEN 6
 float evaluate(float *inputs, float weights[][1<<16]) {
     int i;
 
-    for (i = 0; i < N_HIDDEN; ++i) {
+    for (i = 0; i < 6; ++i) {
         inputs[(1<<16) + i] = activate(inputs, weights[i], 1<<16);
     }
-    return activate(inputs + (1<<16), weights[N_HIDDEN], N_HIDDEN);
+    return activate(inputs + (1<<16), weights[6], 6);
 }
 
-#define RATE 0.3
-float backpropagate(float *inputs, float weights[][1<<16], float target) {
-    float out = evaluate(inputs, weights);
-    float error, output_delta;
-    int j;
+float backpropagate(float *inputs, float weights[][1<<16], float n) {
+    float error, output_delta, hidden_delta;
+    int j, k;
 
-    error        = target - out;
-    output_delta = dx_activate(inputs + (1<<16), weights[N_HIDDEN], N_HIDDEN) * error;
+    error        = n - evaluate(inputs, weights);
+    output_delta = dx_activate(inputs + (1<<16), weights[6], 6) * error;
 
-    for (j = 0; j < N_HIDDEN; ++j) {
-        int k;
-        float hidden_delta, change;
-
-        error        = output_delta * weights[N_HIDDEN][j];
-        hidden_delta = dx_activate(inputs, weights[j], 1<<16) * error;
+    for (j = 0; j < 6; ++j) {
+        hidden_delta = dx_activate(inputs, weights[j], 1<<16) * output_delta * weights[6][j];
 
         for (k = 0; k < 1<<16; ++k) {
-            change = hidden_delta * inputs[k];
-            weights[j][k] += RATE * change;
+            weights[j][k] += 0.3 * hidden_delta * inputs[k];
         }
 
-        change = output_delta * inputs[(1<<16) + j];
-        weights[N_HIDDEN][j] += RATE * change;
+        weights[6][j] += 0.3 * output_delta * inputs[(1<<16) + j];
     }
 
-    return powf(target - out, 2);
+    return powf(error, 2);
 }
 
 float **getfiles(char *dirname) {
@@ -93,7 +84,7 @@ float **getfiles(char *dirname) {
 
             if ((stdin = fopen(full_name, "r"))) {
                 inputs = realloc(inputs, sizeof(float *) * (i + 1));
-                inputs[i] = bigrammer(stdin);
+                inputs[i] = dismember(stdin);
                 ++i;
             }
         }
@@ -106,11 +97,11 @@ float **getfiles(char *dirname) {
 }
 
 int main(int argc, char **argv) {
-    float weights[N_HIDDEN+1][1<<16];
-    int i, j;
+    float weights[7][1<<16], ***training;
+    int i, j, n;
 
     srand(time(NULL));
-    for (i = 0; i < N_HIDDEN+1; ++i) {
+    for (i = 0; i < 7; ++i) {
         for (j = 0; j < 1<<16; ++j) {
             weights[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
         }
@@ -119,9 +110,6 @@ int main(int argc, char **argv) {
     fread(weights, sizeof(weights), 1, stdin);
 
     if (*argv[1] == '-') {
-        int n;
-        float ***training;
-
         argc -= 2;
 
         training = malloc(sizeof(float **) * argc);
@@ -130,7 +118,7 @@ int main(int argc, char **argv) {
         }
 
         for (n = 0; n < atoi(&(argv[1][1])); ++n) {
-            float error = 0.0;
+            float error = 0;
             for (i = 0; i < argc; ++i) {
                 for (j = 0; training[i][j]; ++j) {
                     error += backpropagate(training[i][j], weights, 1.0 - (float)i / (float)(argc - 1));
@@ -143,7 +131,7 @@ int main(int argc, char **argv) {
     } else {
         for (i = 1; i < argc; ++i) {
             if ((stdin = fopen(argv[i], "r"))) {
-                fprintf(stderr, "%s %f\n", argv[i], evaluate(bigrammer(stdin), weights));
+                fprintf(stderr, "%s %f\n", argv[i], evaluate(dismember(stdin), weights));
             }
         }
     }
