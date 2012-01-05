@@ -91,7 +91,7 @@ float **getfiles(char *dirname) {
 }
 
 int main(int argc, char **argv) {
-    float wts[7][1<<16], ***training;
+    float wts[7][1<<16], ***corpses;
     int i, j, n;
 
     srand(time(NULL));
@@ -106,19 +106,19 @@ int main(int argc, char **argv) {
     if (*argv[1] == '-') {
         argc -= 2;
 
-        training = malloc(sizeof(float **) * argc);
+        corpses = malloc(sizeof(float **) * argc);
         for (i = 0; i < argc; ++i) {
-            training[i] = getfiles(argv[i + 2]);
+            corpses[i] = getfiles(argv[i + 2]);
         }
 
         for (n = 0; n < atoi(&(argv[1][1])); ++n) {
-            float error = 0;
+            wts[6][97] = 0;
             for (i = 0; i < argc; ++i) {
-                for (j = 0; training[i][j]; ++j) {
-                    error += backpropagate(training[i][j], wts, 1.0 - (float)i / (float)(argc - 1));
+                for (j = 0; corpses[i][j]; ++j) {
+                    wts[6][97] += backpropagate(corpses[i][j], wts, 1.0 - (float)i / (float)(argc - 1));
                 }
             }
-            fprintf(stderr, "%d: %f\n", n, error);
+            fprintf(stderr, "%d: %f\n", n, wts[6][97]);
         }
 
         fwrite(wts, sizeof(wts), 1, stdout);
