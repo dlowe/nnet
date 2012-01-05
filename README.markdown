@@ -22,14 +22,15 @@ The neurons' activation function is the logistic function 1 / (1 + e ^ -x).
 
 ## Classifying
 
-    ./prog files < trained.net
+    ./prog file [file ...] < trained.net
 
 To classify files, one specifies a trained network (on stdin) and one or more
 files to classify. The program will output one line per successfully-classified
 file, with the filename and the classification, a number between 0 and 1.
 
 The interpretation of the classification depends on how the network was
-trained, but is geared toward interpretation as a *probability*.
+trained, but is geared toward interpretation as a *probability* or a
+*confidence*.
 
 ## Training
 
