@@ -5,7 +5,6 @@
 #include <float.h>
 
 extern float *dismember(FILE *f);
-extern float logistic(float x);
 extern float weighted_sum(float *inputs, float *weights, int count);
 extern float evaluate(float *inputs, float weights[][1<<16]);
 extern float **disinter(char *dirname);
@@ -68,20 +67,6 @@ START_TEST (test_bigrammer)
     /* byte boundaries... */
     bigram_string("\0\0", 2, 1, "\0\0", 1.0F);
     bigram_string("\xFF\xFF", 2, 1, "\xFF\xFF", 1.0F);
-}
-END_TEST
-
-START_TEST (test_logistic)
-{
-    float y;
-    y = logistic(0.0);
-    fail_unless(y == 0.5);
-
-    y = logistic(-1 * FLT_MAX);
-    fail_unless(y == 0.0);
-
-    y = logistic(FLT_MAX);
-    fail_unless(y == 1.0);
 }
 END_TEST
 
@@ -207,7 +192,6 @@ int main(void) {
     
     tc = tcase_create("nnet");
     tcase_add_test(tc, test_bigrammer);
-    tcase_add_test(tc, test_logistic);
     tcase_add_test(tc, test_weighted_sum);
     tcase_add_test(tc, test_evaluate);
     tcase_add_test(tc, test_getfiles);

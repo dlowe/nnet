@@ -21,10 +21,6 @@ float *dismember(FILE *f) {
     return bigrams;
 }
 
-float logistic(float x) {
-    return powf(1 + expf(-x), -1);
-}
-
 float weighted_sum(float *inputs, float *wts, int c) {
     float s = 0;
     for (--c; c >= 0; --c) {
@@ -37,10 +33,10 @@ float evaluate(float *inputs, float wts[][1<<16]) {
     int i;
 
     for (i = 0; i < 6; ++i) {
-        inputs[(1<<16) + i] = logistic(weighted_sum(inputs, wts[i], 1<<16));
+        inputs[(1<<16) + i] = powf(1 + expf(-weighted_sum(inputs, wts[i], 1<<16)), -1);
         wts[6][50+i] = inputs[(1<<16) + i] * (1.0 - inputs[(1<<16) + i]);
     }
-    wts[6][81] = logistic(weighted_sum(inputs + (1<<16), wts[6], 6));
+    wts[6][81] = 1 / (1 + expf(-weighted_sum(inputs + (1<<16), wts[6], 6)));
     wts[6][82] = wts[6][81] * (1.0 - wts[6][81]);
 
     return wts[6][81];
