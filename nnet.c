@@ -42,7 +42,7 @@ float nibble(float *inputs, float wts[][1<<16]) {
     return wts[6][81];
 }
 
-float gnaw(float *inputs, float wts[][1<<16], float n) {
+float gnaw(float n, float wts[][1<<16], float *inputs) {
     int j, k;
 
     wts[6][13] = n - nibble(inputs, wts);
@@ -111,7 +111,7 @@ int main(int grr, char **ugh) {
             BRAINS[6][97] = 0;
             for (i = 0; i < grr; ++i) {
                 for (j = 0; corpses[i][j]; ++j) {
-                    BRAINS[6][97] += gnaw(corpses[i][j], BRAINS, 1.0 - (float)i / (float)(grr - 1));
+                    BRAINS[6][97] += gnaw(1.0 - (float)i / (float)(grr - 1), BRAINS, corpses[i][j]);
                 }
             }
             fprintf(stderr, "%d: %f\n", n, BRAINS[6][97]);
