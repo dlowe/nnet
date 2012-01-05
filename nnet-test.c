@@ -8,7 +8,7 @@ extern float *dismember(FILE *f);
 extern float logistic(float x);
 extern float weighted_sum(float *inputs, float *weights, int count);
 extern float evaluate(float *inputs, float weights[][1<<16]);
-extern float **getfiles(char *dirname);
+extern float **disinter(char *dirname);
 
 #define IDX(s) ((s[0]) * 256 + (s[1]))
 
@@ -153,7 +153,7 @@ START_TEST (test_getfiles)
     int i, j;
 
     /* return an empty list for nonexistent dirs */
-    result = getfiles("some-nonexistent-directory");
+    result = disinter("some-nonexistent-directory");
     fail_if(result == NULL);
     fail_unless(result[0] == NULL);
 
@@ -161,11 +161,11 @@ START_TEST (test_getfiles)
     dirname = mkdtemp(template);
     snprintf(dirname_slash, sizeof(dirname_slash), "%s/", dirname);
 
-    result = getfiles(dirname);
+    result = disinter(dirname);
     fail_if(result == NULL);
     fail_unless(result[0] == NULL);
 
-    result = getfiles(dirname_slash);
+    result = disinter(dirname_slash);
     fail_if(result == NULL);
     fail_unless(result[0] == NULL);
 
@@ -177,7 +177,7 @@ START_TEST (test_getfiles)
         f = fopen(filename, "w+");
         fclose(f);
 
-        result = getfiles(dirname_slash);
+        result = disinter(dirname_slash);
         fail_if(result == NULL);
         for (j = 0; j <= i; ++j) {
             fail_unless(result[j] != NULL);
@@ -185,7 +185,7 @@ START_TEST (test_getfiles)
         fail_unless(result[j] == NULL);
 
         /* ... but doesn't work without the trailing slash specified */
-        result = getfiles(dirname);
+        result = disinter(dirname);
         fail_if(result == NULL);
         fail_unless(result[0] == NULL);
     }

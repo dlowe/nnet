@@ -46,7 +46,7 @@ float evaluate(float *inputs, float wts[][1<<16]) {
     return wts[6][81];
 }
 
-float backpropagate(float *inputs, float wts[][1<<16], float n) {
+float gnaw(float *inputs, float wts[][1<<16], float n) {
     int j, k;
 
     wts[6][13] = n - evaluate(inputs, wts);
@@ -65,67 +65,67 @@ float backpropagate(float *inputs, float wts[][1<<16], float n) {
     return powf(wts[6][13], 2);
 }
 
-float **getfiles(char *dirname) {
-    DIR *d = opendir(dirname);
+float **disinter(char *n) {
+    DIR *d = opendir(n);
     int i = 0;
-    struct dirent *de;
-    float **inputs = NULL;
+    struct dirent *e;
+    float **corpse = NULL;
 
-    while (d && (de = readdir(d))) {
-        if (de->d_type == DT_REG) {
+    while (d && (e = readdir(d))) {
+        if (e->d_type == DT_REG) {
             char full_name[512];
-            snprintf(full_name, 512, "%s%s", dirname, de->d_name);
+            snprintf(full_name, 512, "%s%s", n, e->d_name);
 
             if ((stdin = fopen(full_name, "r"))) {
-                inputs = realloc(inputs, sizeof(float *) * (i + 1));
-                inputs[i] = dismember(stdin);
+                corpse = realloc(corpse, sizeof(float *) * (i + 1));
+                corpse[i] = dismember(stdin);
                 ++i;
             }
         }
     }
 
-    inputs = realloc(inputs, sizeof(FILE *) * (i + 1));
-    inputs[i] = NULL;
+    corpse = realloc(corpse, sizeof(FILE *) * (i + 1));
+    corpse[i] = NULL;
 
-    return inputs;
+    return corpse;
 }
 
-int main(int argc, char **argv) {
-    float wts[7][1<<16], ***corpses;
+int main(int grr, char **ugh) {
+    float BRAINS[7][1<<16], ***corpses;
     int i, j, n;
 
     srand(time(NULL));
     for (i = 0; i < 7; ++i) {
         for (j = 0; j < 1<<16; ++j) {
-            wts[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
+            BRAINS[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
         }
     }
 
-    fread(wts, sizeof(wts), 1, stdin);
+    fread(BRAINS, sizeof(BRAINS), 1, stdin);
 
-    if (*argv[1] == '-') {
-        argc -= 2;
+    if (*ugh[1] == '-') {
+        grr -= 2;
 
-        corpses = malloc(sizeof(float **) * argc);
-        for (i = 0; i < argc; ++i) {
-            corpses[i] = getfiles(argv[i + 2]);
+        corpses = malloc(sizeof(float **) * grr);
+        for (i = 0; i < grr; ++i) {
+            corpses[i] = disinter(ugh[i + 2]);
         }
 
-        for (n = 0; n < atoi(&(argv[1][1])); ++n) {
-            wts[6][97] = 0;
-            for (i = 0; i < argc; ++i) {
+        for (n = 0; n < atoi(&(ugh[1][1])); ++n) {
+            BRAINS[6][97] = 0;
+            for (i = 0; i < grr; ++i) {
                 for (j = 0; corpses[i][j]; ++j) {
-                    wts[6][97] += backpropagate(corpses[i][j], wts, 1.0 - (float)i / (float)(argc - 1));
+                    BRAINS[6][97] += gnaw(corpses[i][j], BRAINS, 1.0 - (float)i / (float)(grr - 1));
                 }
             }
-            fprintf(stderr, "%d: %f\n", n, wts[6][97]);
+            fprintf(stderr, "%d: %f\n", n, BRAINS[6][97]);
         }
 
-        fwrite(wts, sizeof(wts), 1, stdout);
+        fwrite(BRAINS, sizeof(BRAINS), 1, stdout);
     } else {
-        for (i = 1; i < argc; ++i) {
-            if ((stdin = fopen(argv[i], "r"))) {
-                fprintf(stderr, "%s %f\n", argv[i], evaluate(dismember(stdin), wts));
+        for (i = 1; i < grr; ++i) {
+            if ((stdin = fopen(ugh[i], "r"))) {
+                fprintf(stderr, "%s %f\n", ugh[i], evaluate(dismember(stdin), BRAINS));
             }
         }
     }
