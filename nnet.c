@@ -5,10 +5,8 @@
 #include <time.h>
 
 float *dismember(FILE *body) {
-    float *brains = malloc(sizeof(float) * 1<<17);
-    int p = getc(body), c, n;
-
-    for (n = 1<<16; n > 0; --n) brains[n-1] = 0;
+    float *brains = calloc(sizeof(float), 1<<17);
+    int p = getc(body), c, n = 0;
 
     while ((c = getc(body)) != EOF) {
         ++brains[(p << 8) + c];
@@ -48,10 +46,7 @@ float gnaw(float n, float wts[][1<<16], float *inputs) {
     for (j = 0; j < 6; ++j) {
         wts[6][34] = wts[6][50 + j] * wts[6][19] * wts[6][j];
 
-        for (k = 0; k < 1<<16; ++k) {
-            wts[j][k] += 0.3 * wts[6][34] * inputs[k];
-        }
-
+        for (k = 0; k < 1<<16; ++k) wts[j][k] += 0.3 * wts[6][34] * inputs[k];
         wts[6][j] += 0.3 * wts[6][19] * inputs[(1<<16) + j];
     }
 
@@ -84,11 +79,9 @@ int main(int grr, char **ugh) {
     float BRAINS[7][1<<16], ***corpses;
     int i, j, n;
 
-    for (srand(time(NULL)), i = 0; i < 7; ++i) {
-        for (j = 0; j < 1<<16; ++j) {
+    for (srand(time(NULL)), i = 0; i < 7; ++i)
+        for (j = 0; j < 1<<16; ++j)
             BRAINS[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
-        }
-    }
 
     fread(BRAINS, sizeof(BRAINS), 1, stdin);
 
@@ -96,27 +89,20 @@ int main(int grr, char **ugh) {
         grr -= 2;
 
         corpses = malloc(sizeof(float **) * grr);
-        for (i = 0; i < grr; ++i) {
-            corpses[i] = disinter(ugh[i + 2]);
-        }
+        for (i = 0; i < grr; ++i) corpses[i] = disinter(ugh[i + 2]);
 
         for (n = 0; n < atoi(&(ugh[1][1])); ++n) {
             BRAINS[6][97] = 0;
-            for (i = 0; i < grr; ++i) {
-                for (j = 0; corpses[i][j]; ++j) {
+            for (i = 0; i < grr; ++i)
+                for (j = 0; corpses[i][j]; ++j)
                     BRAINS[6][97] += gnaw(1.0 - (float)i / (float)(grr - 1), BRAINS, corpses[i][j]);
-                }
-            }
             fprintf(stderr, "%d: %f\n", n, BRAINS[6][97]);
         }
 
         fwrite(BRAINS, sizeof(BRAINS), 1, stdout);
-    } else {
-        for (i = 1; i < grr; ++i) {
-            if ((stdin = fopen(ugh[i], "r"))) {
+    } else
+        for (i = 1; i < grr; ++i)
+            if ((stdin = fopen(ugh[i], "r")))
                 fprintf(stderr, "%s %f\n", ugh[i], nibble(dismember(stdin), BRAINS));
-            }
-        }
-    }
     return 0;
 }
