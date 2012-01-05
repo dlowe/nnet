@@ -4,28 +4,26 @@
 #include <math.h>
 #include <time.h>
 
-float *dismember(FILE *f) {
-    float *bigrams = malloc(sizeof(float) * 1<<17);
-    int p = getc(f), c, n;
+float *dismember(FILE *body) {
+    float *brains = malloc(sizeof(float) * 1<<17);
+    int p = getc(body), c, n;
 
-    for (n = 1<<16; n > 0; --n) bigrams[n-1] = 0;
+    for (n = 1<<16; n > 0; --n) brains[n-1] = 0;
 
-    while ((c = getc(f)) != EOF) {
-        ++bigrams[256 * p + c];
+    while ((c = getc(body)) != EOF) {
+        ++brains[(p << 8) + c];
         ++n;
         p = c;
     }
 
-    if (n) for (p = 0; p < 1<<16; ++p) bigrams[p] /= n;
+    if (n) for (p = 0; p < 1<<16; ++p) brains[p] /= n;
 
-    return bigrams;
+    return brains;
 }
 
 float crush(float *wts, int c, float *inputs) {
-    float s = 0;
-    for (--c; c >= 0; --c) {
-        s += inputs[c] * wts[c];
-    }
+    float s;
+    for (s=0, --c; c >= 0; --c) s += inputs[c] * c[wts];
     return s;
 }
 
@@ -37,9 +35,8 @@ float nibble(float *inputs, float wts[][1<<16]) {
         wts[6][50+i] = inputs[(1<<16) + i] * (1.0 - inputs[(1<<16) + i]);
     }
     wts[6][81] = 1 / (1 + expf(-crush(inputs + (1<<16), 6, wts[6])));
-    wts[6][82] = wts[6][81] * (1.0 - wts[6][81]);
 
-    return wts[6][81];
+    return wts[6][82] = wts[6][81] * (1.0 - wts[6][81]), wts[6][81];
 }
 
 float gnaw(float n, float wts[][1<<16], float *inputs) {
@@ -80,18 +77,14 @@ float **disinter(char *n) {
         }
     }
 
-    corpse = realloc(corpse, sizeof(FILE *) * (i + 1));
-    corpse[i] = NULL;
-
-    return corpse;
+    return corpse = realloc(corpse, sizeof(FILE *) * (i + 1)), corpse[i] = NULL, corpse;
 }
 
 int main(int grr, char **ugh) {
     float BRAINS[7][1<<16], ***corpses;
     int i, j, n;
 
-    srand(time(NULL));
-    for (i = 0; i < 7; ++i) {
+    for (srand(time(NULL)), i = 0; i < 7; ++i) {
         for (j = 0; j < 1<<16; ++j) {
             BRAINS[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
         }
