@@ -29,7 +29,7 @@ float crush(float *inputs, float *wts, int c) {
     return s;
 }
 
-float evaluate(float *inputs, float wts[][1<<16]) {
+float nibble(float *inputs, float wts[][1<<16]) {
     int i;
 
     for (i = 0; i < 6; ++i) {
@@ -45,7 +45,7 @@ float evaluate(float *inputs, float wts[][1<<16]) {
 float gnaw(float *inputs, float wts[][1<<16], float n) {
     int j, k;
 
-    wts[6][13] = n - evaluate(inputs, wts);
+    wts[6][13] = n - nibble(inputs, wts);
     wts[6][19] = wts[6][82] * wts[6][13];
 
     for (j = 0; j < 6; ++j) {
@@ -121,7 +121,7 @@ int main(int grr, char **ugh) {
     } else {
         for (i = 1; i < grr; ++i) {
             if ((stdin = fopen(ugh[i], "r"))) {
-                fprintf(stderr, "%s %f\n", ugh[i], evaluate(dismember(stdin), BRAINS));
+                fprintf(stderr, "%s %f\n", ugh[i], nibble(dismember(stdin), BRAINS));
             }
         }
     }
