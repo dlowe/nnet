@@ -99,17 +99,13 @@ float **getfiles(char *dirname) {
     while (d && (de = readdir(d))) {
         if (de->d_type == DT_REG) {
             char full_name[512];
-            FILE *f;
-
             snprintf(full_name, 512, "%s%s", dirname, de->d_name);
 
-            f = fopen(full_name, "r");
-            if (f) {
+            if ((stdin = fopen(full_name, "r"))) {
                 inputs = realloc(inputs, sizeof(float *) * (i + 1));
-                inputs[i] = bigrammer(f);
+                inputs[i] = bigrammer(stdin);
                 ++i;
             }
-            fclose(f);
         }
     }
 
@@ -158,9 +154,8 @@ int main(int argc, char **argv) {
         fwrite(weights, sizeof(weights), 1, stdout);
     } else {
         for (i = 1; i < argc; ++i) {
-            FILE *f = fopen(argv[i], "r");
-            if (f) {
-                fprintf(stderr, "%s %f\n", argv[i], evaluate(bigrammer(f), weights));
+            if ((stdin = fopen(argv[i], "r"))) {
+                fprintf(stderr, "%s %f\n", argv[i], evaluate(bigrammer(stdin), weights));
             }
         }
     }

@@ -33,6 +33,19 @@ test: $(TNAME)
 	@rm -rf prog.c prog
 	@echo "testing README.markdown"
 	@Markdown.pl README.markdown >/dev/null
+	@echo "testing training from scratch"
+	./$(NAME) -3 ./training/ioccc-1/ ./training/ioccc-0/ < /dev/null > test.brain0 2>test.out
+	@test `cat test.out | wc -l` -eq 3
+	@test `grep '^[0-2]: [0-9.]\+$$' test.out | wc -l` -eq 3
+	@echo "testing incremental training"
+	./$(NAME) -3 ./training/ioccc-1/ ./training/ioccc-0/ < test.brain0 > test.brain 2>test.out
+	@test `cat test.out | wc -l` -eq 3
+	@test `grep '^[0-2]: [0-9.]\+$$' test.out | wc -l` -eq 3
+	@echo "testing classification"
+	./$(NAME) $(CODE) < test.brain 2>test.out
+	@test `cat test.out | wc -l` -eq 1
+	@grep -q '^nnet.c 0\.[0-9]\+$$' test.out
+	@rm -f test.brain test.brain0 test.out
 
 .PHONY: test_png
 test_png: $(NAME)
