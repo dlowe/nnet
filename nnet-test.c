@@ -5,7 +5,7 @@
 #include <float.h>
 
 extern float *dismember(FILE *f);
-extern float weighted_sum(float *inputs, float *weights, int count);
+extern float crush(float *inputs, float *weights, int count);
 extern float evaluate(float *inputs, float weights[][1<<16]);
 extern float **disinter(char *dirname);
 
@@ -75,7 +75,7 @@ START_TEST (test_weighted_sum)
     float inputs[2] = { 0.1, 0.1 };
     float weights[2] = { -1.0, 1.0 };
 
-    float result = weighted_sum(inputs, weights, 2);
+    float result = crush(inputs, weights, 2);
     fail_unless(result == 0.0);
 }
 END_TEST
