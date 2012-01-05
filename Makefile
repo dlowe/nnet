@@ -6,7 +6,7 @@ CC     := gcc
 CFLAGS := -ggdb -std=c89 -Wall -Werror -pedantic-errors -O3
 
 .PHONY: all
-all: $(NAME)
+all: test
 
 TNAME   := $(NAME)-test
 TCODE   := $(TNAME).c
@@ -18,11 +18,11 @@ $(TNAME): $(TCODE) $(OBJ)
 CODE_SIZE := $(shell cat $(CODE) | wc -c)
 RULE_SIZE := $(shell cat $(CODE) | perl -pe 's/[;{}]\s//g' | perl -pe 's/\s//g' | wc -c)
 
-.PHONY: test
-test: $(TNAME)
+.PHONY: static-test
+static-test: $(TNAME)
 	@./$(TNAME)
 	@echo "code size $(CODE_SIZE) / 4096"
-	#@test $(CODE_SIZE) -le 4096
+	@test $(CODE_SIZE) -le 4096
 	@echo "rule size $(RULE_SIZE) / 2048"
 	#@test $(RULE_SIZE) -le 2048
 	@echo "testing 'build' script"
@@ -33,6 +33,9 @@ test: $(TNAME)
 	@rm -rf prog.c prog
 	@echo "testing README.markdown"
 	@Markdown.pl README.markdown >/dev/null
+
+.PHONY: test
+test: $(NAME)
 	@echo "testing training from scratch"
 	./$(NAME) -3 ./training/ioccc-1/ ./training/ioccc-0/ < /dev/null > test.brain0 2>test.out
 	@test `cat test.out | wc -l` -eq 3
@@ -63,7 +66,7 @@ test_english: $(NAME)
 	./$(NAME) -2000 ./training/english-1/ ./training/english-0/ < /dev/null > english.brain
 	./$(NAME) ./test/english-1/* ./test/english-0/* < english.brain
 
-$(NAME): test $(OBJ)
+$(NAME): static-test $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ)
 
 .PHONY: clean

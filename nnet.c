@@ -8,29 +8,24 @@ float *bigrammer(FILE *f) {
     float *bigrams = malloc(sizeof(float) * 1<<17);
     int p = getc(f), c, n;
 
-    /* init bigrams to 0 (and init n to 0!) */
     for (n = 1<<16; n > 0; --n) bigrams[n-1] = 0;
 
-    /* walk stream and remember bigrams */
     while ((c = getc(f)) != EOF) {
         ++bigrams[256 * p + c];
         ++n;
         p = c;
     }
 
-    /* normalize */
     if (n) for (p = 0; p < 1<<16; ++p) bigrams[p] /= n;
 
     return bigrams;
 }
 
 float logistic(float x) {
-    /* 1/(1+exp(-x)) */
     return powf(1 + expf(-x), -1);
 }
 
 float weighted_sum(float *inputs, float *weights, int count) {
-    /* return weighted sum of inputs */
     float s = 0;
     for (--count; count >= 0; --count) {
         s += inputs[count] * weights[count];
@@ -39,12 +34,10 @@ float weighted_sum(float *inputs, float *weights, int count) {
 }
 
 float activate(float *inputs, float *weights, int count) {
-    /* given N inputs and weights, activate a neuron */
     return logistic(weighted_sum(inputs, weights, count));
 }
 
 float dx_activate(float *inputs, float *weights, int count) {
-    /* given N inputs and weights, compute the derivative of the activation function */
     float l = logistic(weighted_sum(inputs, weights, count));
     return l * (1.0 - l);
 }
@@ -55,7 +48,6 @@ float evaluate(float *inputs, float weights[][1<<16]) {
 
     for (i = 0; i < N_HIDDEN; ++i) {
         inputs[(1<<16) + i] = activate(inputs, weights[i], 1<<16);
-        /* printf("hidden node %d: %f\n", i, inputs[(1<<16) + i]); */
     }
     return activate(inputs + (1<<16), weights[N_HIDDEN], N_HIDDEN);
 }
@@ -76,13 +68,11 @@ float backpropagate(float *inputs, float weights[][1<<16], float target) {
         error        = output_delta * weights[N_HIDDEN][j];
         hidden_delta = dx_activate(inputs, weights[j], 1<<16) * error;
 
-        /* update input weights for this hidden node */
         for (k = 0; k < 1<<16; ++k) {
             change = hidden_delta * inputs[k];
             weights[j][k] += RATE * change;
         }
 
-        /* update the output weight for this hidden node */
         change = output_delta * inputs[(1<<16) + j];
         weights[N_HIDDEN][j] += RATE * change;
     }
@@ -109,7 +99,6 @@ float **getfiles(char *dirname) {
         }
     }
 
-    /* null-terminate */
     inputs = realloc(inputs, sizeof(FILE *) * (i + 1));
     inputs[i] = NULL;
 
@@ -120,7 +109,6 @@ int main(int argc, char **argv) {
     float weights[N_HIDDEN+1][1<<16];
     int i, j;
 
-    /* randomize weights */
     srand(time(NULL));
     for (i = 0; i < N_HIDDEN+1; ++i) {
         for (j = 0; j < 1<<16; ++j) {
