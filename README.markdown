@@ -16,9 +16,10 @@ This is a multilayer perceptron (a feedforward artificial neural network)
 which can be trained, using on-line backpropagation, to classify input files. I've
 included three training corpora to play with:
 
- * ioccc.tar.gz: train the program to identify winning IOCCC entries
- * png.tar.gz: train the program to differentiate .png from .gif images
- * english.tar.gz: train the program to differentiate english from french text
+* ioccc.tar.gz: train the program to identify winning IOCCC entries
+* png.tar.gz: train the program to differentiate .png from .gif images
+* english.tar.gz: train the program to differentiate english from french text
+* xor.tar.gz: train the program to perform "xor"
 
 ... but you can train it by pointing it at any set of directories. The first
 directory's contents will take on a desired output value of 1, and the last
@@ -80,6 +81,17 @@ Results:
  * interpreting output of "> 0.5" as "probably english" and "< 0.5" as
    "probably french"
  * produced a network with 100% accuracy
+
+### xor corpora
+
+The xor-1 corpus consists of two files containing '01' and '10' respectively.
+
+The xor-0 corpus consists of two files containing '00' and '11' respectively.
+
+Results:
+ * using these corpora as a training set
+ * accepting nothing less than perfect binary answers
+ * eventually (200,000+ iterations!) produced a network with 100% accuracy
 
 ## Limitations
 The topology of the network is fixed: 2^16 input neurons, 6 hidden neurons, and
