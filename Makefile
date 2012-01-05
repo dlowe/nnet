@@ -66,6 +66,11 @@ test_english: $(NAME)
 	./$(NAME) -2000 ./training/english-1/ ./training/english-0/ < /dev/null > english.brain
 	./$(NAME) ./test/english-1/* ./test/english-0/* < english.brain
 
+.PHONY: test_xor
+test_xor:
+	./$(NAME) -8000 ./training/xor-1/ ./training/xor-0/ < /dev/null > xor.brain
+	./$(NAME) ./training/xor-*/* < xor.brain
+
 $(NAME): static-test $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ)
 
@@ -74,4 +79,4 @@ clean:
 	rm -rf $(NAME) $(OBJ)
 	rm -rf prog.c prog
 	rm -rf $(TNAME) $(HACKOBJ)
-	rm -rf png.brain ioccc.brain english.brain
+	rm -rf png.brain ioccc.brain english.brain xor.brain
