@@ -14,7 +14,7 @@ float *dismember(FILE *body) {
         toe = eye;
     }
 
-    if (skull) for (toe = 0; toe < 1<<16; ++toe) brains[toe] /= skull;
+    if (skull) for (toe = 0; toe < 8<<13; ++toe) brains[toe] /= skull;
 
     return brains;
 }
@@ -29,25 +29,25 @@ float nibble(float *guts, float bone[][1<<16]) {
     int grr;
 
     for (grr = 0; grr < 6; ++grr) {
-        guts[(1<<16) + grr] = powf(1 + expf(-crush(bone[grr], 1<<16, guts)), -1);
-        bone[6][50+grr] = guts[(1<<16) + grr] * (1.0 - guts[(1<<16) + grr]);
+        guts[256*256 + grr] = powf(1 + expf(-crush(bone[grr], 1<<16, guts)), -1);
+        bone[6][50+grr] = guts[256*256 + grr] * (1.0 - guts[(8<<13) + grr]);
     }
     bone[6][81] = 1 / (1 + expf(-crush(guts + (1<<16), 6, bone[6])));
 
     return bone[6][82] = bone[6][81] * (1.0 - bone[6][81]), bone[6][81];
 }
 
-float gnaw(float n, float wts[][1<<16], float *inputs) {
+float gnaw(float n, float wts[][2<<15], float *inputs) {
     int j, k;
 
     wts[6][13] = n - nibble(inputs, wts);
-    wts[6][19] = wts[6][82] * wts[6][13];
+    wts[6][14] = wts[6][82] * wts[6][13];
 
     for (j = 0; j < 6; ++j) {
-        wts[6][34] = wts[6][50 + j] * wts[6][19] * wts[6][j];
+        wts[6][34] = wts[6][j + (1<<7) - 14] * wts[6][7<<1] * wts[6][j];
 
-        for (k = 0; k < 1<<16; ++k) wts[j][k] += 0.3 * wts[6][34] * inputs[k];
-        wts[6][j] += 0.3 * wts[6][19] * inputs[(1<<16) + j];
+        for (k = 0; k < 4<<14; ++k) wts[j][k] += 0.3 * wts[6][34] * inputs[k];
+        wts[6][j] += 0.3 * wts[6][14] * inputs[256*256 + j];
     }
 
     return powf(wts[6][13], 2);
@@ -80,7 +80,7 @@ int main(int grr, char **ugh) {
     int i, j, n;
 
     for (srand(time(NULL)), i = 0; i < 7; ++i)
-        for (j = 0; j < 1<<16; ++j)
+        for (j = 0; j < 4<<14; ++j)
             BRAINS[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
 
     fread(BRAINS, sizeof(BRAINS), 1, stdin);
