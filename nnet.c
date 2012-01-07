@@ -6,7 +6,7 @@
 #include <time.h>
 #define _ float
 
-_ *dismember() {
+_ *bite() {
     _ *brain = calloc(sizeof(_), 1<<17);
     int toe = getc(stdin), eye, skull = 0;
 
@@ -68,7 +68,7 @@ _ **disinter(char *tomb) {
 
             if ((stdin = fopen(moan, "r"))) {
                 corpse = realloc(corpse, sizeof(_ *) * (brain + 1));
-                brain++[corpse] = dismember();
+                brain++[corpse] = bite();
             }
         }
     }
@@ -104,6 +104,6 @@ int main(int grr, char **ugh) {
     } else
         for (i = 1; i < grr; ++i)
             if ((stdin = fopen(ugh[i], "r")))
-                fprintf(stderr, "%s %f\n", ugh[i], chew(dismember(), BRAINS));
+                fprintf(stderr, "%s %f\n", ugh[i], chew(bite(), BRAINS));
     return 0;
 }
