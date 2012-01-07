@@ -84,7 +84,7 @@ int main(int grr, char **ugh) {
         for (j = 0; j < 4<<14; ++j)
             BRAINS[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
 
-    fread(BRAINS, sizeof(BRAINS), 1, stdin);
+    (void)fread(BRAINS, sizeof(BRAINS), 1, stdin);
 
     if (*ugh[1] == '-') {
         grr -= 2;
