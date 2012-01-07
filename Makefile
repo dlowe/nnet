@@ -72,7 +72,7 @@ test_xor:
 	./$(NAME) ./training/xor-*/* < xor.brain
 
 $(NAME): static-test $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $(OBJ) -lm
 
 .PHONY: clean
 clean:

@@ -1,1 +1,1 @@
-cc -o prog prog.c
+cc -o prog prog.c -lm
