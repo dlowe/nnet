@@ -72,7 +72,7 @@ float **disinter(char *tomb) {
         }
     }
 
-    return corpse = realloc(corpse, sizeof(FILE *) * (i + 1)), corpse[i] = NULL, corpse;
+    return corpse = realloc(corpse, sizeof(float *) * (i + 1)), corpse[i] = NULL, corpse;
 }
 
 int main(int grr, char **ugh) {
