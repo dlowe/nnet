@@ -59,7 +59,7 @@ test_english: $(NAME)
 	./$(NAME) ./test/english-1/* ./test/english-0/* < english.brain
 
 .PHONY: test_xor
-test_xor:
+test_xor: $(NAME)
 	./$(NAME) -8000 ./training/xor-1/ ./training/xor-0/ < /dev/null > xor.brain
 	./$(NAME) ./training/xor-*/* < xor.brain
 
