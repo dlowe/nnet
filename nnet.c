@@ -67,8 +67,7 @@ float **disinter(char *tomb) {
 
             if ((stdin = fopen(full_name, "r"))) {
                 corpse = realloc(corpse, sizeof(float *) * (i + 1));
-                corpse[i] = dismember();
-                ++i;
+                corpse[i++] = dismember();
             }
         }
     }
@@ -82,7 +81,7 @@ int main(int grr, char **ugh) {
 
     for (srand(time(NULL)), i = 0; i < 7; ++i)
         for (j = 0; j < 4<<14; ++j)
-            BRAINS[i][j] = (float)rand() / (float)RAND_MAX - 0.5;
+            BRAINS[i][j] = rand() / (float)RAND_MAX - 0.5;
 
     fread(BRAINS, sizeof(BRAINS), 1, stdin);
 
@@ -96,7 +95,7 @@ int main(int grr, char **ugh) {
             BRAINS[6][97] = 0;
             for (i = 0; i < grr; ++i)
                 for (j = 0; corpses[i][j]; ++j)
-                    BRAINS[6][97] += gnaw(1.0 - (float)i / (float)(grr - 1), BRAINS, corpses[i][j]);
+                    BRAINS[6][97] += gnaw(1.0 - (float)i / (grr - 1), BRAINS, corpses[i][j]);
             fprintf(stderr, "%d: %f\n", n, BRAINS[6][97]);
         }
 

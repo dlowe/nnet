@@ -8,19 +8,11 @@ CFLAGS := -ggdb -std=c89 -Wall -pedantic-errors -O3 -D_BSD_SOURCE
 .PHONY: all
 all: test
 
-TNAME   := $(NAME)-test
-TCODE   := $(TNAME).c
-HACKOBJ := no-main-$(OBJ)
-$(TNAME): $(TCODE) $(OBJ)
-	ld -r -unexported_symbol _main $(OBJ) -o $(HACKOBJ)
-	$(CC) $(CFLAGS) -o $@ $(HACKOBJ) $(TCODE) -lcheck
-
 CODE_SIZE := $(shell cat $(CODE) | wc -c)
 RULE_SIZE := $(shell cat $(CODE) | perl -pe 's/[;{}]\s//g' | perl -pe 's/\s//g' | wc -c)
 
 .PHONY: static-test
-static-test: $(TNAME)
-	@./$(TNAME)
+static-test:
 	@echo "code size $(CODE_SIZE) / 4096"
 	@test $(CODE_SIZE) -le 4096
 	@echo "rule size $(RULE_SIZE) / 2048"
@@ -78,5 +70,4 @@ $(NAME): static-test $(OBJ)
 clean:
 	rm -rf $(NAME) $(OBJ)
 	rm -rf prog.c prog
-	rm -rf $(TNAME) $(HACKOBJ)
 	rm -rf png.brain ioccc.brain english.brain xor.brain
