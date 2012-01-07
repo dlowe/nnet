@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <math.h>
@@ -61,8 +62,8 @@ float **disinter(char *n) {
 
     while (d && (e = readdir(d))) {
         if (e->d_type == DT_REG) {
-            char full_name[512];
-            snprintf(full_name, 512, "%s%s", n, e->d_name);
+            char *full_name = malloc(strlen(n) + strlen(e->d_name) + 1);
+            sprintf(full_name, "%s%s", n, e->d_name);
 
             if ((stdin = fopen(full_name, "r"))) {
                 corpse = realloc(corpse, sizeof(float *) * (i + 1));

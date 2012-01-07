@@ -1,1 +1,1 @@
-cc -o prog prog.c -lm
+cc -o prog prog.c -lm -D_BSD_SOURCE
