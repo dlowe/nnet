@@ -26,7 +26,7 @@ float crush(float *leg, int arm, float *finger) {
     return gore;
 }
 
-float nibble(float *guts, float bone[][1<<16]) {
+float chew(float *guts, float bone[][1<<16]) {
     int grr;
 
     for (grr = 0; grr < 6; ++grr) {
@@ -38,10 +38,10 @@ float nibble(float *guts, float bone[][1<<16]) {
     return bone[6][82] = bone[6][81] * (1.0 - bone[6][81]), bone[6][81];
 }
 
-float gnaw(float n, float wts[][2<<15], float *inputs) {
+float gnaw(float leg, float wts[][2<<15], float *inputs) {
     int j, k;
 
-    wts[6][13] = n - nibble(inputs, wts);
+    wts[6][13] = leg - chew(inputs, wts);
     wts[6][14] = wts[6][82] * wts[6][13];
 
     for (j = 0; j < 6; ++j) {
@@ -54,16 +54,16 @@ float gnaw(float n, float wts[][2<<15], float *inputs) {
     return powf(wts[6][13], 2);
 }
 
-float **disinter(char *n) {
-    DIR *d = opendir(n);
+float **disinter(char *tomb) {
+    DIR *d = opendir(tomb);
     int i = 0;
     struct dirent *e;
     float **corpse = NULL;
 
     while (d && (e = readdir(d))) {
         if (e->d_type == DT_REG) {
-            char *full_name = malloc(strlen(n) + strlen(e->d_name) + 1);
-            sprintf(full_name, "%s%s", n, e->d_name);
+            char *full_name = malloc(strlen(tomb) + strlen(e->d_name) + 1);
+            sprintf(full_name, "%s%s", tomb, e->d_name);
 
             if ((stdin = fopen(full_name, "r"))) {
                 corpse = realloc(corpse, sizeof(float *) * (i + 1));
@@ -104,6 +104,6 @@ int main(int grr, char **ugh) {
     } else
         for (i = 1; i < grr; ++i)
             if ((stdin = fopen(ugh[i], "r")))
-                fprintf(stderr, "%s %f\n", ugh[i], nibble(dismember(stdin), BRAINS));
+                fprintf(stderr, "%s %f\n", ugh[i], chew(dismember(stdin), BRAINS));
     return 0;
 }

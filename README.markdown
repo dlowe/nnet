@@ -149,6 +149,8 @@ tends to result in empty output.
 
 Given exactly one corpus, the program will crash or produce garbage.
 
+The program will crash and die horribly if it runs out of memory.
+
 # Obfuscation:
 
 Zombies! (Since neural networks are modeled after BRAINS, ya know? And

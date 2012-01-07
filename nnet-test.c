@@ -6,7 +6,7 @@
 
 extern float *dismember(FILE *f);
 extern float crush(float *inputs, int count, float *weights);
-extern float nibble(float *inputs, float weights[][1<<16]);
+extern float chew(float *inputs, float weights[][1<<16]);
 extern float **disinter(char *dirname);
 
 #define IDX(s) ((s[0]) * 256 + (s[1]))
@@ -102,7 +102,7 @@ START_TEST (test_evaluate)
     bigrams = dismember(f);
 
     /* evaluates to 0.5 */
-    x = nibble(bigrams, weights);
+    x = chew(bigrams, weights);
     fail_unless(x == 0.5);
     /* stashes the derivative in weights[6][82] ! */
     fail_unless(weights[6][82] == 0.25);
@@ -110,7 +110,7 @@ START_TEST (test_evaluate)
     /* force it to zero */
     weights[0][IDX("aa")] = -7;
     weights[6][0] = -100000;
-    x = nibble(bigrams, weights);
+    x = chew(bigrams, weights);
     fail_unless(x == 0.0);
     fail_unless(weights[6][82] == 0.0);
     weights[0][IDX("aa")] = 0;
@@ -119,7 +119,7 @@ START_TEST (test_evaluate)
     /* force it to one */
     weights[1][IDX("aa")] = 7;
     weights[6][1] = 100000;
-    x = nibble(bigrams, weights);
+    x = chew(bigrams, weights);
     fail_unless(x == 1.0);
     fail_unless(weights[6][82] == 0.0);
     weights[1][IDX("aa")] = 0;
