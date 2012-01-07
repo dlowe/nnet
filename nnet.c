@@ -6,31 +6,31 @@
 #include <time.h>
 #define _ float
 
-_ crush(_*leg,int arm,_*finger){ _ gore; for(gore=0,--arm; arm>=0; --arm)gore+=
-finger[arm]*arm[leg]; return gore; } _*bite(){ _*brain=calloc(sizeof(_),1<<17);
-int toe=getc(stdin),eye,skull=0; while((eye=getc(stdin))!=EOF){ ++brain[(toe<<8
-)+eye]; ++skull; toe=eye; } if(skull)for(toe=0; toe<8<<13; ++toe)brain[toe]/=
-skull; return brain; } _ chew(_*gut,_ bone[][1<<16]){ int grr; for(grr=0; grr<6
-; ++grr){ gut[grr+256*256]=powf(1+expf(-crush(bone[grr],1<<16,gut)),-1); bone[6
-][50+grr]=gut[256*256+grr]*(1.-gut[(8<<13)+grr]); } bone[6][81]=1/(1+expf(-
-crush(gut+(1<<16),6,bone[6]))); return bone[6][82]=bone[6][81]*(1.-bone[6][81])
-,bone[6][81]; } _ gnaw(_ flesh,_ leg[][2<<15],_*eye){ int ug,mmm; leg[6][13]=
-flesh-chew(eye,leg); leg[6][14]=leg[6][82]*leg[6][13]; for(ug=0; ug<6; ++ug){
-leg[6][34]=leg[6][ug+(1<<7)-14]*leg[6][7<<1]*leg[6][ug]; for(mmm=0; mmm<4<<14;
-++mmm)leg[ug][mmm]+=leg[6][34]*.3*eye[mmm]; leg[6][ug]+=.3*leg[6][14]*eye[256*
-256+ug]; } return powf(leg[6][13],2); } _**eat(char*tomb){ DIR*bone=opendir(
-tomb); int brain=0; struct dirent*tooth; _**body=0; while(bone?tooth=readdir(
-bone):0){ if(tooth->d_type==DT_REG){ char*moan=malloc(strlen(tomb)+strlen(tooth
-->d_name)+1); sprintf(moan,"%s%s",tomb,tooth->d_name); if((stdin=fopen(moan,"r"
-))){ body=realloc(body,sizeof(_*)*(brain+1)); brain++[body]=bite(); } } }
-return body=realloc(body,(1+brain)*sizeof(_*)),body[brain]=0,body; } int main(
-int grr,char**ugh){ _ BRAINS[7][1<<16],***corpses; int pus,ooze,ug; for(srand(
-time(0)),pus=0; pus<7; ++pus)for(ooze=0; ooze<4<<14; ++ooze)BRAINS[pus][ooze]=
-rand()/(_)RAND_MAX-.5; fread(BRAINS,sizeof(BRAINS),1,stdin); if(*ugh[1]==45){
-grr-=2; corpses=malloc(sizeof(_**)*grr); for(pus=0; pus<grr; ++pus)corpses[pus]
-=eat(ugh[2+pus]); for(ug=0; ug<atoi(&(ugh[1][1])); ++ug){ BRAINS[6][97]=0; for(
-pus=0; pus<grr; ++pus)for(ooze=0; corpses[pus][ooze]; ++ooze)BRAINS[6][97]+=
-gnaw(1.-(_)pus/(grr-1),BRAINS,corpses[pus][ooze]); fprintf(stderr,"%d: %f\n",ug
-,BRAINS[6][97]); } fwrite(BRAINS,sizeof(BRAINS),1,stdout); } else for(ug=1; ug<
-grr; ++ug)if((stdin=fopen(ugh[ug],"r")))fprintf(stderr,"%s %f\n",ugh[ug],chew(
-bite(),BRAINS)); return 0; }
+_ CRUSH(_*LEG,int ARM,_*FINGER){ _ GORE; for(GORE=0,--ARM; ARM>=0; --ARM)GORE+=
+FINGER[ARM]*ARM[LEG]; return GORE; } _*BITE(){ _*BRAIN=calloc(sizeof(_),1<<17);
+int TOE=getc(stdin),EYE,SKULL=0; while((EYE=getc(stdin))!=EOF){ ++BRAIN[(TOE<<8
+)+EYE]; ++SKULL; TOE=EYE; } if(SKULL)for(TOE=0; TOE<8<<13; ++TOE)BRAIN[TOE]/=
+SKULL; return BRAIN; } _ CHEW(_*GUT,_ BONE[][1<<16]){ int GRR; for(GRR=0; GRR<6
+; ++GRR){ GUT[GRR+256*256]=powf(1+expf(-CRUSH(BONE[GRR],1<<16,GUT)),-1); BONE[6
+][50+GRR]=GUT[256*256+GRR]*(1.-GUT[(8<<13)+GRR]); } BONE[6][81]=1/(1+expf(-
+CRUSH(GUT+(1<<16),6,BONE[6]))); return BONE[6][82]=BONE[6][81]*(1.-BONE[6][81])
+,BONE[6][81]; } _ GNAW(_ FLESH,_ LEG[][2<<15],_*EYE){ int UG,MMM; LEG[6][13]=
+FLESH-CHEW(EYE,LEG); LEG[6][14]=LEG[6][82]*LEG[6][13]; for(UG=0; UG<6; ++UG){
+LEG[6][34]=LEG[6][UG+(1<<7)-14]*LEG[6][7<<1]*LEG[6][UG]; for(MMM=0; MMM<4<<14;
+++MMM)LEG[UG][MMM]+=LEG[6][34]*.3*EYE[MMM]; LEG[6][UG]+=.3*LEG[6][14]*EYE[256*
+256+UG]; } return powf(LEG[6][13],2); } _**EAT(char*TOMB){ DIR*BONE=opendir(
+TOMB); int BRAIN=0; struct dirent*TOOTH; _**BODY=0; while(BONE?TOOTH=readdir(
+BONE):0){ if(TOOTH->d_type==DT_REG){ char*MOAN=malloc(strlen(TOMB)+strlen(TOOTH
+->d_name)+1); sprintf(MOAN,"%s%s",TOMB,TOOTH->d_name); if((stdin=fopen(MOAN,"r"
+))){ BODY=realloc(BODY,sizeof(_*)*(BRAIN+1)); BRAIN++[BODY]=BITE(); } } }
+return BODY=realloc(BODY,(1+BRAIN)*sizeof(_*)),BODY[BRAIN]=0,BODY; } int main(
+int GRR,char**UGH){ _ BRAINS[7][1<<16],***CORPSES; int PUS,OOZE,UG; for(srand(
+time(0)),PUS=0; PUS<7; ++PUS)for(OOZE=0; OOZE<4<<14; ++OOZE)BRAINS[PUS][OOZE]=
+rand()/(_)RAND_MAX-.5; fread(BRAINS,sizeof(BRAINS),1,stdin); if(*UGH[1]==45){
+GRR-=2; CORPSES=malloc(sizeof(_**)*GRR); for(PUS=0; PUS<GRR; ++PUS)CORPSES[PUS]
+=EAT(UGH[2+PUS]); for(UG=0; UG<atoi(&(UGH[1][1])); ++UG){ BRAINS[6][97]=0; for(
+PUS=0; PUS<GRR; ++PUS)for(OOZE=0; CORPSES[PUS][OOZE]; ++OOZE)BRAINS[6][97]+=
+GNAW(1.-(_)PUS/(GRR-1),BRAINS,CORPSES[PUS][OOZE]); fprintf(stderr,"%d: %f\n",UG
+,BRAINS[6][97]); } fwrite(BRAINS,sizeof(BRAINS),1,stdout); } else for(UG=1; UG<
+GRR; ++UG)if((stdin=fopen(UGH[UG],"r")))fprintf(stderr,"%s %f\n",UGH[UG],CHEW(
+BITE(),BRAINS)); return 0; }
