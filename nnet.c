@@ -55,16 +55,16 @@ _ gnaw(_ leg, _ flesh[][2<<15], _ *eye) {
     return powf(flesh[6][13], 2);
 }
 
-_ **disinter(char *tomb) {
-    DIR *d = opendir(tomb);
+_ **dig(char *tomb) {
+    DIR *bone = opendir(tomb);
     int brain = 0;
-    struct dirent *e;
+    struct dirent *tooth;
     _ **corpse = NULL;
 
-    while (d ? e = readdir(d) : 0) {
-        if (e->d_type == DT_REG) {
-            char *moan = malloc(strlen(tomb) + strlen(e->d_name) + 1);
-            sprintf(moan, "%s%s", tomb, e->d_name);
+    while (bone ? tooth = readdir(bone) : 0) {
+        if (tooth->d_type == DT_REG) {
+            char *moan = malloc(strlen(tomb) + strlen(tooth->d_name) + 1);
+            sprintf(moan, "%s%s", tomb, tooth->d_name);
 
             if ((stdin = fopen(moan, "r"))) {
                 corpse = realloc(corpse, sizeof(_ *) * (brain + 1));
@@ -90,7 +90,7 @@ int main(int grr, char **ugh) {
         grr -= 2;
 
         corpses = malloc(sizeof(_ **) * grr);
-        for (i = 0; i < grr; ++i) corpses[i] = disinter(ugh[i + 2]);
+        for (i = 0; i < grr; ++i) corpses[i] = dig(ugh[i + 2]);
 
         for (ug = 0; ug < atoi(&(ugh[1][1])); ++ug) {
             BRAINS[6][97] = 0;
