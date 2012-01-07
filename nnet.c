@@ -5,11 +5,11 @@
 #include <math.h>
 #include <time.h>
 
-float *dismember(FILE *body) {
+float *dismember() {
     float *brains = calloc(sizeof(float), 1<<17);
-    int toe = getc(body), eye, skull = 0;
+    int toe = getc(stdin), eye, skull = 0;
 
-    while ((eye = getc(body)) != EOF) {
+    while ((eye = getc(stdin)) != EOF) {
         ++brains[(toe << 8) + eye];
         ++skull;
         toe = eye;
@@ -67,7 +67,7 @@ float **disinter(char *tomb) {
 
             if ((stdin = fopen(full_name, "r"))) {
                 corpse = realloc(corpse, sizeof(float *) * (i + 1));
-                corpse[i] = dismember(stdin);
+                corpse[i] = dismember();
                 ++i;
             }
         }
@@ -104,6 +104,6 @@ int main(int grr, char **ugh) {
     } else
         for (i = 1; i < grr; ++i)
             if ((stdin = fopen(ugh[i], "r")))
-                fprintf(stderr, "%s %f\n", ugh[i], chew(dismember(stdin), BRAINS));
+                fprintf(stderr, "%s %f\n", ugh[i], chew(dismember(), BRAINS));
     return 0;
 }
