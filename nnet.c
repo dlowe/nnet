@@ -6,6 +6,12 @@
 #include <time.h>
 #define _ float
 
+_ crush(_*leg, int arm, _ *finger) {
+    _ gore;
+    for (gore=0, --arm; arm >= 0; --arm) gore += finger[arm] * arm[leg];
+    return gore;
+}
+
 _ *bite() {
     _ *brain = calloc(sizeof(_), 1<<17);
     int toe = getc(stdin), eye, skull = 0;
@@ -21,12 +27,6 @@ _ *bite() {
     return brain;
 }
 
-_ crush(_*leg, int arm, _ *finger) {
-    _ gore;
-    for (gore=0, --arm; arm >= 0; --arm) gore += finger[arm] * arm[leg];
-    return gore;
-}
-
 _ chew(_ *gut, _ bone[][1<<16]) {
     int grr;
 
@@ -39,20 +39,20 @@ _ chew(_ *gut, _ bone[][1<<16]) {
     return bone[6][82] = bone[6][81] * (1. - bone[6][81]), bone[6][81];
 }
 
-_ gnaw(_ leg, _ flesh[][2<<15], _ *eye) {
+_ gnaw(_ flesh, _ leg[][2<<15], _ *eye) {
     int ug, mmm;
 
-    flesh[6][13] = leg - chew(eye, flesh);
-    flesh[6][14] = flesh[6][82] * flesh[6][13];
+    leg[6][13] = flesh - chew(eye, leg);
+    leg[6][14] = leg[6][82] * leg[6][13];
 
     for (ug = 0; ug < 6; ++ug) {
-        flesh[6][34] = flesh[6][ug + (1<<7) - 14] * flesh[6][7<<1] * flesh[6][ug];
+        leg[6][34] = leg[6][ug + (1<<7) - 14] * leg[6][7<<1] * leg[6][ug];
 
-        for (mmm = 0; mmm < 4<<14; ++mmm) flesh[ug][mmm] += .3 * flesh[6][34] * eye[mmm];
-        flesh[6][ug] += .3 * flesh[6][14] * eye[256*256 + ug];
+        for (mmm = 0; mmm < 4<<14; ++mmm) leg[ug][mmm] += leg[6][34] * .3 * eye[mmm];
+        leg[6][ug] += .3 * leg[6][14] * eye[256*256 + ug];
     }
 
-    return powf(flesh[6][13], 2);
+    return powf(leg[6][13], 2);
 }
 
 _ **slurp(char *tomb) {
@@ -86,7 +86,7 @@ int main(int grr, char **ugh) {
 
     fread(BRAINS, sizeof(BRAINS), 1, stdin);
 
-    if (*ugh[1] == '-') {
+    if (*ugh[1] == 45) {
         grr -= 2;
 
         corpses = malloc(sizeof(_ **) * grr);
