@@ -55,11 +55,11 @@ _ gnaw(_ flesh, _ leg[][2<<15], _ *eye) {
     return powf(leg[6][13], 2);
 }
 
-_ **slurp(char *tomb) {
+_ **eat(char *tomb) {
     DIR *bone = opendir(tomb);
     int brain = 0;
     struct dirent *tooth;
-    _ **corpse = NULL;
+    _ **body = NULL;
 
     while (bone ? tooth = readdir(bone) : 0) {
         if (tooth->d_type == DT_REG) {
@@ -67,22 +67,22 @@ _ **slurp(char *tomb) {
             sprintf(moan, "%s%s", tomb, tooth->d_name);
 
             if ((stdin = fopen(moan, "r"))) {
-                corpse = realloc(corpse, sizeof(_ *) * (brain + 1));
-                brain++[corpse] = bite();
+                body = realloc(body, sizeof(_ *) * (brain + 1));
+                brain++[body] = bite();
             }
         }
     }
 
-    return corpse = realloc(corpse, (1 + brain) * sizeof(_ *)), corpse[brain] = NULL, corpse;
+    return body = realloc(body, (1 + brain) * sizeof(_ *)), body[brain] = NULL, body;
 }
 
 int main(int grr, char **ugh) {
     _ BRAINS[7][1<<16], ***corpses;
-    int i, j, ug;
+    int pus, ooze, ug;
 
-    for (srand(time(NULL)), i = 0; i < 7; ++i)
-        for (j = 0; j < 4<<14; ++j)
-            BRAINS[i][j] = rand() / (_)RAND_MAX - .5;
+    for (srand(time(NULL)), pus = 0; pus < 7; ++pus)
+        for (ooze = 0; ooze < 4<<14; ++ooze)
+            BRAINS[pus][ooze] = rand() / (_)RAND_MAX - .5;
 
     fread(BRAINS, sizeof(BRAINS), 1, stdin);
 
@@ -90,20 +90,20 @@ int main(int grr, char **ugh) {
         grr -= 2;
 
         corpses = malloc(sizeof(_ **) * grr);
-        for (i = 0; i < grr; ++i) corpses[i] = slurp(ugh[i + 2]);
+        for (pus = 0; pus < grr; ++pus) corpses[pus] = eat(ugh[2+pus]);
 
         for (ug = 0; ug < atoi(&(ugh[1][1])); ++ug) {
             BRAINS[6][97] = 0;
-            for (i = 0; i < grr; ++i)
-                for (j = 0; corpses[i][j]; ++j)
-                    BRAINS[6][97] += gnaw(1. - (_)i / (grr - 1), BRAINS, corpses[i][j]);
+            for (pus = 0; pus < grr; ++pus)
+                for (ooze = 0; corpses[pus][ooze]; ++ooze)
+                    BRAINS[6][97] += gnaw(1. - (_)pus / (grr - 1), BRAINS, corpses[pus][ooze]);
             fprintf(stderr, "%d: %f\n", ug, BRAINS[6][97]);
         }
 
         fwrite(BRAINS, sizeof(BRAINS), 1, stdout);
     } else
-        for (i = 1; i < grr; ++i)
-            if ((stdin = fopen(ugh[i], "r")))
-                fprintf(stderr, "%s %f\n", ugh[i], chew(bite(), BRAINS));
+        for (ug = 1; ug < grr; ++ug)
+            if ((stdin = fopen(ugh[ug], "r")))
+                fprintf(stderr, "%s %f\n", ugh[ug], chew(bite(), BRAINS));
     return 0;
 }

@@ -149,7 +149,9 @@ tends to result in empty output.
 
 Given exactly one corpus, the program will crash or produce garbage.
 
-The program will crash and die horribly if it runs out of memory.
+Leaks memory and file descriptors while processing files (but not while
+training & classifying). The program will crash and die horribly if it runs
+out of memory.
 
 # Obfuscation:
 
