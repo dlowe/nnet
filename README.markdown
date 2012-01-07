@@ -28,15 +28,15 @@ To classify files, one specifies a trained network (on stdin) and one or more
 files to classify. The program will output one line per successfully-classified
 file, with the filename and the classification, a number between 0 and 1.
 
-The interpretation of the classification depends on how the network was
-trained, but is geared toward interpretation as a *probability* or a
+The interpretation of the classification number depends on how the network was
+trained, but it's geared toward interpretation as a *probability* or a
 *confidence*.
 
 ## Training
 
     ./prog -<n_iterations> corpus1/ [...] corpus0/ < start.net > end.net
 
-To train the network, one must specify a starting network (on stdin), two or
+To train a network, one must specify a starting network (on stdin), two or
 more corpora (directories containing training data), and the number of training
 iterations to run. The program will write some progress data to stderr and,
 when it's done, will serialize the network to stdout.
@@ -45,7 +45,7 @@ If no input network is given, a random new network will be generated as a
 starting point (i.e. redirect /dev/null to stdin).
 
 The first corpus will be assigned a target value of 1. The last will be
-assigned a target value of 0. Intervening directories will be assigned
+assigned a target value of 0. Intervening directories (if any) will be assigned
 intermediate target values.
 
 The learning rate is hard-coded as 0.3. No momentum factor is used.
@@ -62,9 +62,9 @@ I've included four training corpora to play with:
 ### ioccc corpora
 
 The ioccc-1 corpus was obtained by taking all files matching /[a-z]+\.c/ from
-the all.tar.gz download from www.ioccc.org.
+all.tar.gz download from http://www.ioccc.org.
 
-The ioccc-0 corpus was obtained by searching github.com for "language:c",
+The ioccc-0 corpus was obtained by searching https://github.com for "language:c",
 and using some sed+curl scripting, doing "raw" downloads of the files on the
 first 10 pages of results whose filenames matched /.*\.c/.
 
@@ -83,10 +83,10 @@ Results:
 ### png corpora
 
 The png-1 corpus was obtained by manually scraping the first results from an
-images.google.com search for "obfuscate filetype:png".
+https://images.google.com search for "obfuscate filetype:png".
 
 The png-0 corpus was obtained by manually scraping the first results from an
-images.google.com search for "obfuscate filetype:gif".
+https://images.google.com search for "obfuscate filetype:gif".
 
 Results:
 
@@ -142,7 +142,7 @@ floating-point representation and endianness.
 
 Making sure not to overfit the network to the training data is a bit of a
 black art. I used a wrapper script to implement early stopping with a set of
-test data separated from the training data.
+test data separated from the training data; other techniques are possible.
 
 Bad input (e.g. nonexistent files, non-numeric number of iterations, etc.)
 tends to result in empty output.
@@ -151,4 +151,5 @@ Given exactly one corpus, the program will crash or produce garbage.
 
 # Obfuscation:
 
-Zombies!
+Zombies! (Since neural networks are modeled after BRAINS, ya know? And
+corpus sounds a lot like corpse. And I have 4- and 7-year-old kids ;)

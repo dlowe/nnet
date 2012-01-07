@@ -6,15 +6,15 @@
 
 float *dismember(FILE *body) {
     float *brains = calloc(sizeof(float), 1<<17);
-    int p = getc(body), c, n = 0;
+    int toe = getc(body), eye, skull = 0;
 
-    while ((c = getc(body)) != EOF) {
-        ++brains[(p << 8) + c];
-        ++n;
-        p = c;
+    while ((eye = getc(body)) != EOF) {
+        ++brains[(toe << 8) + eye];
+        ++skull;
+        toe = eye;
     }
 
-    if (n) for (p = 0; p < 1<<16; ++p) brains[p] /= n;
+    if (skull) for (toe = 0; toe < 1<<16; ++toe) brains[toe] /= skull;
 
     return brains;
 }
