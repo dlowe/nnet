@@ -26,7 +26,8 @@ The neurons' activation function is the logistic function 1 / (1 + e ^ -x).
 
 To classify files, one specifies a trained network (on stdin) and one or more
 files to classify. The program will output one line per successfully-classified
-file, with the filename and the classification, a number between 0 and 1.
+file to stderr, with the filename and the classification: a number between 0
+and 1.
 
 The interpretation of the classification number depends on how the network was
 trained, but it's geared toward interpretation as a *probability* or a
@@ -36,13 +37,13 @@ trained, but it's geared toward interpretation as a *probability* or a
 
     ./prog -<n_iterations> corpus1/ [...] corpus0/ < start.net > end.net
 
-To train a network, one must specify a starting network (on stdin), two or
-more corpora (directories containing training data), and the number of training
+To train a network, one specifies a starting network (on stdin), two or more
+corpora (directories containing training data), and the number of training
 iterations to run. The program will write some progress data to stderr and,
-when it's done, will serialize the network to stdout.
+when it's done, will serialize the updated network to stdout.
 
 If no input network is given, a random new network will be generated as a
-starting point (i.e. redirect /dev/null to stdin).
+starting point (i.e. provide an empty stdin).
 
 The first corpus will be assigned a target value of 1. The last will be
 assigned a target value of 0. Intervening directories (if any) will be assigned
@@ -157,3 +158,14 @@ out of memory.
 
 Zombies! (Since neural networks are modeled after BRAINS, ya know? And
 corpus sounds a lot like corpse. And I have 4- and 7-year-old kids ;)
+
+Had some extra space in one of the major data structures, and it seemed a
+shame to waste it.
+
+Similarly, I think three file descriptors ought to be enough for anyone.
+
+Lots of magic numbers expressed in various ways.
+
+Random abuse of random C trivia.
+
+... but mostly zombies!
