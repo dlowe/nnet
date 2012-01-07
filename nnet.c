@@ -21,35 +21,35 @@ _ *dismember() {
     return brains;
 }
 
-_ crush(_ *leg, int arm, _ *finger) {
+_ crush(_*leg, int arm, _ *finger) {
     _ gore;
     for (gore=0, --arm; arm >= 0; --arm) gore += finger[arm] * arm[leg];
     return gore;
 }
 
-_ chew(_ *guts, _ bone[][1<<16]) {
+_ chew(_ *gut, _ bone[][1<<16]) {
     int grr;
 
     for (grr = 0; grr < 6; ++grr) {
-        guts[grr + 256*256] = powf(1 + expf(-crush(bone[grr], 1<<16, guts)), -1);
-        bone[6][50+grr] = guts[256*256 + grr] * (1.0 - guts[(8<<13) + grr]);
+        gut[grr + 256*256] = powf(1 + expf(-crush(bone[grr], 1<<16, gut)), -1);
+        bone[6][50+grr] = gut[256*256 + grr] * (1.0 - gut[(8<<13) + grr]);
     }
-    bone[6][81] = 1 / (1 + expf(-crush(guts + (1<<16), 6, bone[6])));
+    bone[6][81] = 1 / (1 + expf(-crush(gut + (1<<16), 6, bone[6])));
 
     return bone[6][82] = bone[6][81] * (1.0 - bone[6][81]), bone[6][81];
 }
 
 _ gnaw(_ leg, _ flesh[][2<<15], _ *eye) {
-    int j, k;
+    int ug, mmm;
 
     flesh[6][13] = leg - chew(eye, flesh);
     flesh[6][14] = flesh[6][82] * flesh[6][13];
 
-    for (j = 0; j < 6; ++j) {
-        flesh[6][34] = flesh[6][j + (1<<7) - 14] * flesh[6][7<<1] * flesh[6][j];
+    for (ug = 0; ug < 6; ++ug) {
+        flesh[6][34] = flesh[6][ug + (1<<7) - 14] * flesh[6][7<<1] * flesh[6][ug];
 
-        for (k = 0; k < 4<<14; ++k) flesh[j][k] += 0.3 * flesh[6][34] * eye[k];
-        flesh[6][j] += 0.3 * flesh[6][14] * eye[256*256 + j];
+        for (mmm = 0; mmm < 4<<14; ++mmm) flesh[ug][mmm] += 0.3 * flesh[6][34] * eye[mmm];
+        flesh[6][ug] += 0.3 * flesh[6][14] * eye[256*256 + ug];
     }
 
     return powf(flesh[6][13], 2);
@@ -63,10 +63,10 @@ _ **disinter(char *tomb) {
 
     while (d && (e = readdir(d))) {
         if (e->d_type == DT_REG) {
-            char *full_name = malloc(strlen(tomb) + strlen(e->d_name) + 1);
-            sprintf(full_name, "%s%s", tomb, e->d_name);
+            char *moan = malloc(strlen(tomb) + strlen(e->d_name) + 1);
+            sprintf(moan, "%s%s", tomb, e->d_name);
 
-            if ((stdin = fopen(full_name, "r"))) {
+            if ((stdin = fopen(moan, "r"))) {
                 corpse = realloc(corpse, sizeof(_ *) * (i + 1));
                 corpse[i++] = dismember();
             }
