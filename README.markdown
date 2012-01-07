@@ -65,9 +65,9 @@ I've included four training corpora to play with:
 The ioccc-1 corpus was obtained by taking all files matching /[a-z]+\.c/ from
 all.tar.gz download from http://www.ioccc.org.
 
-The ioccc-0 corpus was obtained by searching https://github.com for "language:c",
-and using some sed+curl scripting, doing "raw" downloads of the files on the
-first 10 pages of results whose filenames matched /.*\.c/.
+The ioccc-0 corpus was obtained by searching https://github.com for
+"language:c", and using some sed+curl scripting, doing "raw" downloads of the
+files on the first 10 pages of results whose filenames matched /.*\.c/.
 
 Results:
 
@@ -80,6 +80,11 @@ Results:
  * reports that the post-obfuscation version has 0.NNN probability of being an
    ioccc winning entry
  * the predictive accuracy is TBD by the outcome of the contest ;)
+
+(Aside: since there's no corpus of *losing* ioccc entries, this really is only
+learning to classify obfuscated C vs. mundane C. I would be genuinely very
+curious to know whether a network could be trained to differentiate winning
+entries from losing entries: a much harder problem!)
 
 ### png corpora
 
@@ -158,6 +163,10 @@ out of memory.
 
 Zombies! (Since neural networks are modeled after BRAINS, ya know? And
 corpus sounds a lot like corpse. And I have 4- and 7-year-old kids ;)
+
+Neural networks are interesting, and while the math isn't terribly difficult,
+it's tricky in abstract (and impossible in the case of a specific network of
+this size) to understand why it works.
 
 Had some extra space in one of the major data structures, and it seemed a
 shame to waste it.
