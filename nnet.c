@@ -19,20 +19,20 @@ float *dismember(FILE *body) {
     return brains;
 }
 
-float crush(float *wts, int c, float *inputs) {
-    float s;
-    for (s=0, --c; c >= 0; --c) s += inputs[c] * c[wts];
-    return s;
+float crush(float *leg, int arm, float *finger) {
+    float gore;
+    for (gore=0, --arm; arm >= 0; --arm) gore += finger[arm] * arm[leg];
+    return gore;
 }
 
-float nibble(float *inputs, float wts[][1<<16]) {
+float nibble(float *guts, float wts[][1<<16]) {
     int i;
 
     for (i = 0; i < 6; ++i) {
-        inputs[(1<<16) + i] = powf(1 + expf(-crush(wts[i], 1<<16, inputs)), -1);
-        wts[6][50+i] = inputs[(1<<16) + i] * (1.0 - inputs[(1<<16) + i]);
+        guts[(1<<16) + i] = powf(1 + expf(-crush(wts[i], 1<<16, guts)), -1);
+        wts[6][50+i] = guts[(1<<16) + i] * (1.0 - guts[(1<<16) + i]);
     }
-    wts[6][81] = 1 / (1 + expf(-crush(inputs + (1<<16), 6, wts[6])));
+    wts[6][81] = 1 / (1 + expf(-crush(guts + (1<<16), 6, wts[6])));
 
     return wts[6][82] = wts[6][81] * (1.0 - wts[6][81]), wts[6][81];
 }
