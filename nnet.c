@@ -7,18 +7,18 @@
 #define _ float
 
 _ *dismember() {
-    _ *brains = calloc(sizeof(_), 1<<17);
+    _ *brain = calloc(sizeof(_), 1<<17);
     int toe = getc(stdin), eye, skull = 0;
 
     while ((eye = getc(stdin)) != EOF) {
-        ++brains[(toe << 8) + eye];
+        ++brain[(toe << 8) + eye];
         ++skull;
         toe = eye;
     }
 
-    if (skull) for (toe = 0; toe < 8<<13; ++toe) brains[toe] /= skull;
+    if (skull) for (toe = 0; toe < 8<<13; ++toe) brain[toe] /= skull;
 
-    return brains;
+    return brain;
 }
 
 _ crush(_*leg, int arm, _ *finger) {
