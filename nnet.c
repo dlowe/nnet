@@ -29,10 +29,10 @@ float nibble(float *guts, float bone[][1<<16]) {
     int grr;
 
     for (grr = 0; grr < 6; ++grr) {
-        guts[256*256 + grr] = powf(1 + expf(-crush(bone[grr], 1<<16, guts)), -1);
+        guts[256*256 + grr] = pow(1 + exp(-crush(bone[grr], 1<<16, guts)), -1);
         bone[6][50+grr] = guts[256*256 + grr] * (1.0 - guts[(8<<13) + grr]);
     }
-    bone[6][81] = 1 / (1 + expf(-crush(guts + (1<<16), 6, bone[6])));
+    bone[6][81] = 1 / (1 + exp(-crush(guts + (1<<16), 6, bone[6])));
 
     return bone[6][82] = bone[6][81] * (1.0 - bone[6][81]), bone[6][81];
 }
@@ -50,7 +50,7 @@ float gnaw(float n, float wts[][2<<15], float *inputs) {
         wts[6][j] += 0.3 * wts[6][14] * inputs[256*256 + j];
     }
 
-    return powf(wts[6][13], 2);
+    return pow(wts[6][13], 2);
 }
 
 float **disinter(char *n) {
