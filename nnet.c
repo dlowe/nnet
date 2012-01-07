@@ -38,20 +38,20 @@ float chew(float *guts, float bone[][1<<16]) {
     return bone[6][82] = bone[6][81] * (1.0 - bone[6][81]), bone[6][81];
 }
 
-float gnaw(float leg, float wts[][2<<15], float *inputs) {
+float gnaw(float leg, float flesh[][2<<15], float *eye) {
     int j, k;
 
-    wts[6][13] = leg - chew(inputs, wts);
-    wts[6][14] = wts[6][82] * wts[6][13];
+    flesh[6][13] = leg - chew(eye, flesh);
+    flesh[6][14] = flesh[6][82] * flesh[6][13];
 
     for (j = 0; j < 6; ++j) {
-        wts[6][34] = wts[6][j + (1<<7) - 14] * wts[6][7<<1] * wts[6][j];
+        flesh[6][34] = flesh[6][j + (1<<7) - 14] * flesh[6][7<<1] * flesh[6][j];
 
-        for (k = 0; k < 4<<14; ++k) wts[j][k] += 0.3 * wts[6][34] * inputs[k];
-        wts[6][j] += 0.3 * wts[6][14] * inputs[256*256 + j];
+        for (k = 0; k < 4<<14; ++k) flesh[j][k] += 0.3 * flesh[6][34] * eye[k];
+        flesh[6][j] += 0.3 * flesh[6][14] * eye[256*256 + j];
     }
 
-    return powf(wts[6][13], 2);
+    return powf(flesh[6][13], 2);
 }
 
 float **disinter(char *tomb) {
