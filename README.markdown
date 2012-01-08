@@ -163,6 +163,10 @@ The Microsoft C compiler doesn't provide a dirent API, so to get this working
 on a Windows system you'll need cygwin gcc (tested) or some other dirent
 compatibility library (untested).
 
+Backpropagation doesn't always converge. In particular, the xor data is
+quite mismatched to the size of the network and will occasionally completely
+fail to converge; in theory this is a possibility with any data set.
+
 # Obfuscation:
 
 Zombies! (Since neural networks are modeled after BRAINS, ya know? And
