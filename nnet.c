@@ -13,24 +13,7 @@ int TOE=getc(stdin),EYE,SKULL=0; while((EYE=getc(stdin))!=EOF){ ++BRAIN[(TOE<<8
 SKULL; return BRAIN; } _ CHEW(_*GUT,_ BONE[][1<<16]){ int GRR; for(GRR=0; GRR<6
 ; ++GRR){ GUT[GRR+256*256]=powf(1+expf(-CRUSH(BONE[GRR],1<<16,GUT)),-1); BONE[6
 ][50+GRR]=GUT[256*256+GRR]*(1.-GUT[(8<<13)+GRR]); } BONE[6][81]=1/(1+expf(-
-CRUSH(GUT+(1<<16),6,BONE[6])));
-
-fprintf(stderr, "output node:\n"
-    "\tinputs=[%f,%f,%f,%f,%f,%f]\n"
-    "\tweights=[%f,%f,%f,%f,%f,%f]\n"
-    "\t\tweighted sum=[%f]\n"
-    "\t\t1+expf(-ws)=[%f]\n"
-    "\t\toutput=[%f]\n"
-    "\t\tdx=[%f]\n",
-    GUT[(1<<16)+0], GUT[(1<<16)+1], GUT[(1<<16)+2],
-    GUT[(1<<16)+3], GUT[(1<<16)+4], GUT[(1<<16)+5],
-    BONE[6][0], BONE[6][1], BONE[6][2], BONE[6][3], BONE[6][4], BONE[6][5],
-    CRUSH(GUT+(1<<16),6,BONE[6]),
-    1+expf(-CRUSH(GUT+(1<<16),6,BONE[6])),
-    BONE[6][81],
-    BONE[6][81] * (1.-BONE[6][81]));
-
-return BONE[6][82]=BONE[6][81]*(1.-BONE[6][81])
+CRUSH(GUT+(1<<16),6,BONE[6]))); return BONE[6][82]=BONE[6][81]*(1.-BONE[6][81])
 ,BONE[6][81]; } _ GNAW(_ FLESH,_ LEG[][2<<15],_*EYE){ int UG,MMM; LEG[6][13]=
 FLESH-CHEW(EYE,LEG); LEG[6][14]=LEG[6][82]*LEG[6][13]; for(UG=0; UG<6; ++UG){
 LEG[6][34]=LEG[6][UG+(1<<7)-14]*LEG[6][7<<1]*LEG[6][UG]; for(MMM=0; MMM<4<<14;
