@@ -159,6 +159,10 @@ Leaks memory and file descriptors while processing files (but not while
 training & classifying). The program will crash and die horribly if it runs
 out of memory.
 
+The Microsoft C compiler doesn't provide a dirent API, so to get this working
+on a Windows system you'll need cygwin gcc (tested) or some other dirent
+compatibility library (untested).
+
 # Obfuscation:
 
 Zombies! (Since neural networks are modeled after BRAINS, ya know? And
@@ -171,7 +175,7 @@ this size) to understand why it works.
 Had some extra space in one of the major data structures, and it seemed a
 shame to waste it.
 
-Similarly, I think three file descriptors ought to be enough for anyone.
+Similarly, I think three file pointers ought to be enough for anyone.
 
 Lots of magic numbers expressed in various ways.
 
