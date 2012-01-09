@@ -16,14 +16,14 @@ close TOUCH;
 
 while (1) {
     print "training $n to " . ($n+1000) . "...\n";
-    system "./nnet -1000 $train1 $train0 < $net > $net.tmp 2>/dev/null";
+    system "./prog -1000 $train1 $train0 < $net > $net.tmp 2>/dev/null";
     rename "$net.tmp", $net;
 
     my $current_error = 0;
-    for my $r (split /\s+/, `./nnet $test1* < $net 2>&1 | awk '{print \$NF}'`) {
+    for my $r (split /\s+/, `./prog $test1* < $net 2>&1 | awk '{print \$NF}'`) {
         $current_error += ((1.0 - $r) ** 2);
     }
-    for my $r (split /\s+/, `./nnet $test0* < $net 2>&1 | awk '{print \$NF}'`) {
+    for my $r (split /\s+/, `./prog $test0* < $net 2>&1 | awk '{print \$NF}'`) {
         $current_error += ((0.0 - $r) ** 2);
     }
     if (defined $error) {

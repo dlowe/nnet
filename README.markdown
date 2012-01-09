@@ -81,10 +81,8 @@ Results:
    ioccc winning entry
  * the predictive accuracy is TBD by the outcome of the contest ;)
 
-(Aside: since there's no corpus of *losing* ioccc entries, this really is only
-learning to classify obfuscated C vs. mundane C. I would be genuinely very
-curious to know whether a network could be trained to differentiate winning
-entries from losing entries: a much harder problem!)
+(Note: since there's no corpus of *losing* ioccc entries, this really is only
+learning to classify obfuscated C vs. mundane C.)
 
 ### png corpora
 
