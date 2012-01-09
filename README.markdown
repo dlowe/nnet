@@ -99,11 +99,10 @@ Results:
  * using these corpora as a training set
  * using several hundred random *.gif and *.png files from my home computer as
    a test set
- * using a rough "early stopping" algorithm over 1000-iteration training runs,
-   which stopped after 18000 iterations.
+ * using the included "earlystop.pl" script, which stopped after 67000 iterations.
  * interpreting output of "> 0.5" as "probably a .png" and "< 0.5" as "probably
    a .gif"
- * produced a network with about 81% accuracy
+ * produced a network with about 87% accuracy
 
 ### english corpora
 
@@ -118,8 +117,8 @@ Results:
  * using these corpora as a training set
  * using several dozen additional text files (obtained by the same methods)
    as a test set
- * using a rough "early stopping" algorithm over 1000-iteration training runs,
-   which stopped after 2000 iterations.
+ * using the included "earlystop.pl" script, which stopped after 10000
+   iterations.
  * interpreting output of "> 0.5" as "probably english" and "< 0.5" as
    "probably french"
  * produced a network with 100% accuracy
