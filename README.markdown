@@ -63,7 +63,7 @@ I've included four training corpora to play with:
 ### ioccc corpora
 
 The ioccc-1 corpus was obtained by taking all files matching /[a-z]+\.c/ from
-all.tar.gz download from http://www.ioccc.org.
+all.tar.gz download from http://www.ioccc.org, excluding mkentry.c.
 
 The ioccc-0 corpus was obtained by searching https://github.com for
 "language:c", and using some sed+curl scripting, doing "raw" downloads of the
