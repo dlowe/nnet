@@ -66,6 +66,14 @@ test_xor: $(NAME)
 $(NAME): static-test $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $(OBJ) -lm
 
+.PHONY: info
+info:
+	rm -f ioccc.tar.gz png.tar.gz english.tar.gz xor.tar.gz
+	(cd ./training; COPYFILE_DISABLE=True tar cvzf ../ioccc.tar.gz ioccc-1 ioccc-0)
+	(cd ./training; COPYFILE_DISABLE=True tar cvzf ../png.tar.gz png-1 png-0)
+	(cd ./training; COPYFILE_DISABLE=True tar cvzf ../english.tar.gz english-1 english-0)
+	(cd ./training; COPYFILE_DISABLE=True tar cvzf ../xor.tar.gz xor-1 xor-0)
+
 .PHONY: clean
 clean:
 	rm -rf $(NAME) $(OBJ)
