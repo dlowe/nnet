@@ -1,5 +1,5 @@
 # Usage:
-    $ gunzip ioccc.tar.gz
+    $ gunzip -c ioccc.tar.gz | tar xf -
     $ ./prog -1000 ./ioccc-1/ ./ioccc-0/ < /dev/null > ioccc.brains
     ...
     $ ./prog prog.c < ioccc.brains
