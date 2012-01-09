@@ -1,11 +1,11 @@
 # Usage:
     $ gunzip ioccc.tar.gz
-    $ ./prog -400 ./ioccc-1/ ./ioccc-0/ < /dev/null > ioccc.judge
+    $ ./prog -1000 ./ioccc-1/ ./ioccc-0/ < /dev/null > ioccc.brains
     ...
-    $ ./prog prog.c < ioccc.judge
-    prog.c 0.981931
-    $ ./prog squeaky_clean.c < ioccc.judge
-    squeaky_clean.c 0.013124
+    $ ./prog prog.c < ioccc.brains
+    prog.c 0.959197
+    $ ./prog squeaky_clean.c < ioccc.brains
+    squeaky_clean.c 0.236000
 
 # Synopsis:
 This is an artificially intelligent judging tool to help the IOCCC judges.
@@ -58,7 +58,7 @@ I've included four training corpora to play with:
  * ioccc.tar.gz: train the program to identify winning IOCCC entries
  * png.tar.gz: train the program to differentiate .png from .gif images
  * english.tar.gz: train the program to differentiate english from french text
- * xor.tar.gz: train the program to perform "xor"
+ * xor.tar.gz: train the program to apply "xor" (canonical neural net example)
 
 ### ioccc corpora
 
@@ -66,19 +66,17 @@ The ioccc-1 corpus was obtained by taking all files matching /[a-z]+\.c/ from
 all.tar.gz download from http://www.ioccc.org, excluding mkentry.c.
 
 The ioccc-0 corpus was obtained by searching https://github.com for
-"language:c", and using some sed+curl scripting, doing "raw" downloads of the
-files on the first 10 pages of results whose filenames matched /.*\.c/.
+"language:c", and doing scripted "raw" downloads of the first results whose
+filenames matched /.*\.c/.
 
 Results:
 
  * using these corpora as a training set
- * using pre- and post-obfuscation versions of its own source code as a test
-   set
  * training for 1000 iterations
- * reports that the pre-obfuscation version has 0.NNN probability of being an
-   ioccc winning entry
- * reports that the post-obfuscation version has 0.NNN probability of being an
-   ioccc winning entry
+ * reports that the pre-obfuscation version of this entry has 0.26 probability
+   of being an ioccc winning entry
+ * reports that the post-obfuscation version of this entry has 0.96 probability
+   of being an ioccc winning entry
  * the predictive accuracy is TBD by the outcome of the contest ;)
 
 (Note: since there's no corpus of *losing* ioccc entries, this really is only
@@ -144,25 +142,24 @@ Serialized network files are only portable between systems with the same
 floating-point representation and endianness.
 
 Making sure not to overfit the network to the training data is a bit of a
-black art. I used a wrapper script to implement early stopping with a set of
-test data separated from the training data; other techniques are possible.
+black art. I have enclosed 'earlystop.pl', a wrapper script that implements
+a simple 'early stopping' algorithm; other techniques are possible.
 
 Bad input (e.g. nonexistent files, non-numeric number of iterations, etc.)
 tends to result in empty output.
 
 Given exactly one corpus, the program will crash or produce garbage.
 
-Leaks memory and file descriptors while processing files (but not while
-training & classifying). The program will crash and die horribly if it runs
-out of memory.
+Leaks memory and file descriptors while processing files.
+
+Will crash and die horribly if it runs out of memory.
 
 The Microsoft C compiler doesn't provide a dirent API, so to get this working
-on a Windows system you'll need cygwin gcc (tested) or some other dirent
-compatibility library (untested).
+on a Windows system you'll need cygwin+gcc (tested) or a dirent compatibility
+library (untested, but they do exist).
 
-Backpropagation doesn't always converge. In particular, the xor data is
-quite mismatched to the size of the network and will occasionally completely
-fail to converge; in theory this is a possibility with any data set.
+Backpropagation doesn't always converge: if you play with this long enough,
+you'll eventually have a training session that completely fails to converge.
 
 # Obfuscation:
 
@@ -170,8 +167,7 @@ Zombies! (Since neural networks are modeled after BRAINS, ya know? And
 corpus sounds a lot like corpse. And I have 4- and 7-year-old kids ;)
 
 Neural networks are interesting, and while the math isn't terribly difficult,
-it's tricky in abstract (and impossible in the case of a specific network of
-this size) to understand why it works.
+their behavior is difficult to fully understand.
 
 Had some extra space in one of the major data structures, and it seemed a
 shame to waste it.
@@ -181,5 +177,8 @@ Similarly, I think three file pointers ought to be enough for anyone.
 Lots of magic numbers expressed in various ways.
 
 Random abuse of random C trivia.
+
+Some textual changes were made to maximize the classification of this program
+by the network trained to recognize ioccc winners ;)
 
 ... but mostly zombies!
